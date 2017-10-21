@@ -5,10 +5,10 @@ import sol_spells
 
 
 
-# Next thing to do is make an actual spell with an actual 
-# spell.resolve() method.  Then I think the game is fully functional.
-# Except for that shit about ending in a tie//blue victory,
-# if the board state repeats 5 times.
+# The only core game feature 
+# not yet implemented is detecting that the game
+# is going in a loop (after 5 repeats of the board state)
+# and making blue win in this case (after giving red fair warning).
 # But I'll save that for another time.
 
 
