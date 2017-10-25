@@ -1,6 +1,12 @@
 
 ### Sigil Online
 
+### BEGINNING DAEMONIZATION
+import gevent
+from flask import Flask
+from flask_sockets import Sockets
+
+
 import sol_spells
 
 
