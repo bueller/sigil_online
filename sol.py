@@ -91,11 +91,17 @@ class Spell():
 			elif player.sigils == 2:
 				refills = self.one_sigil_refill + self.two_sigil_refill
 
-			print("You get to keep {} stones in ".format(refills) + self.name + ".")
-			
+			if refills > 1:
+				print("You get to keep {} stones in ".format(refills) + self.name + ".")
+			elif refills == 1:
+				print("You get to keep 1 stone in " + self.name + ".")
+
 			while refills > 0:
 				keep = input("Select a stone to keep: ")
-				if self.board.nodes[keep].stone != None:
+				if self.board.nodes[keep] not in self.position:
+					print("That's not a node in your spell!")
+
+				elif self.board.nodes[keep].stone != None:
 					print("You already kept that stone!")
 					continue
 				else:
@@ -105,8 +111,9 @@ class Spell():
 
 
 		self.resolve(player)
-		player.lock = self
+		
 		if not self.ischarm:
+			player.lock = self
 			self.board.countdown -= 1
 
 
