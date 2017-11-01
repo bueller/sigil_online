@@ -883,7 +883,7 @@ totalplayers = 0
 
 # The first player to join will be red.
 
-@sockets.route('/game')
+@sockets.route('/api/game')
 def playgame(ws):
 	global totalplayers
 	global turncounter

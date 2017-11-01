@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+  api:
+    image: ulmenhaus/sigil:api
+    build:
+      context: api
+
+  proxy:
+    image: ulmenhaus/sigil:proxy
+    build:
+      context: proxy
+    ports:
+      - 8000:8000
+
+  static:
+    image: ulmenhaus/sigil:www-client
+    build:
+      context: clients/www
+    volumes:
+      - $PWD:/trackit
