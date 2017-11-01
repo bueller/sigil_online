@@ -1,6 +1,12 @@
 
 ### Sigil Online
 
+### BEGINNING DAEMONIZATION
+import gevent
+from flask import Flask
+from flask_sockets import Sockets
+
+
 import sol_spells
 
 
@@ -70,7 +76,8 @@ class Spell():
 		### sacrifice all stones in it, and refill appropriate
 		### number based on sigils
 		pname = player.color[0].upper() + player.color[1:]
-		print(pname + " casts " + self.name)
+		player.ws.send(pname + " casts " + self.name)
+		player.opp.ws.send(pname + " casts " + self.name)
 		if self.ischarm:
 			for node in self.position:
 				node.stone = None
@@ -92,17 +99,18 @@ class Spell():
 				refills = self.one_sigil_refill + self.two_sigil_refill
 
 			if refills > 1:
-				print("You get to keep {} stones in ".format(refills) + self.name + ".")
+				player.ws.send("You get to keep {} stones in ".format(refills) + self.name + ".")
 			elif refills == 1:
-				print("You get to keep 1 stone in " + self.name + ".")
+				player.ws.send("You get to keep 1 stone in " + self.name + ".")
 
 			while refills > 0:
-				keep = input("Select a stone to keep: ")
+				player.ws.send("Select a stone to keep: ")
+				keep = player.ws.receive()
 				if self.board.nodes[keep] not in self.position:
-					print("That's not a node in your spell!")
+					player.ws.send("That's not a node in your spell!")
 
 				elif self.board.nodes[keep].stone != None:
-					print("You already kept that stone!")
+					player.ws.send("You already kept that stone!")
 					continue
 				else:
 					refills -= 1
@@ -282,6 +290,11 @@ class Board():
 	def display(self, whoseturn):
 		### Displays the current board state.
 		### Gets called at the BEGINNING of each turn.
+		if whoseturn == 'red':
+			player = self.redplayer
+		elif whoseturn == 'blue':
+			player = self.blueplayer
+
 		redlist = []
 		bluelist = []
 		for name in self.nodes:
@@ -290,33 +303,43 @@ class Board():
 				redlist.append(name)
 			elif color == 'blue':
 				bluelist.append(name)
-		print("\n\n\nRed stones: ", redlist)
-		print("Blue stones: ", bluelist)
+		player.ws.send("\n\n\nRed stones: "+ str(redlist))
+		player.ws.send("Blue stones: "+ str(bluelist))
+		player.opp.ws.send("\n\n\nRed stones: "+ str(redlist))
+		player.opp.ws.send("Blue stones: "+ str(bluelist))
+
 
 		redtotal = len(redlist)
 		bluetotal = len(bluelist) + 1
 		if whoseturn == 'red':
 			if bluetotal > redtotal:
-				print("Blue is winning by " + str(bluetotal - redtotal))
+				player.ws.send("Blue is winning by " + str(bluetotal - redtotal))
+				player.opp.ws.send("Blue is winning by " + str(bluetotal - redtotal))
 			else:
-				print("Red is winning by " + str(redtotal + 1 - bluetotal))
-
+				player.ws.send("Red is winning by " + str(redtotal + 1 - bluetotal))
+				player.opp.ws.send("Red is winning by " + str(redtotal + 1 - bluetotal))
 		elif whoseturn == 'blue':
 			if redtotal > bluetotal:
-				print("Red is winning by " + str(redtotal - bluetotal))
+				player.ws.send("Red is winning by " + str(redtotal - bluetotal))
+				player.opp.ws.send("Red is winning by " + str(redtotal - bluetotal))
 			else:
-				print("Blue is winning by " + str(bluetotal + 1 - redtotal))
+				player.ws.send("Blue is winning by " + str(bluetotal + 1 - redtotal))
+				player.opp.ws.send("Blue is winning by " + str(bluetotal + 1 - redtotal))
 
 
 
 
+		player.ws.send("Red Sigils: "+ str(red.sigils))
+		player.opp.ws.send("Red Sigils: "+ str(red.sigils))
 
-		print("Red Sigils: ", red.sigils)
-		print("Blue Sigils: ", blue.sigils)
+		player.ws.send("Blue Sigils: "+ str(blue.sigils))
+		player.opp.ws.send("Blue Sigils: "+ str(blue.sigils))
 		if self.countdown > 1:
-			print("{} spellcasts remaining".format(self.countdown))
+			player.ws.send("{} spellcasts remaining".format(self.countdown))
+			player.opp.ws.send("{} spellcasts remaining".format(self.countdown))
 		elif self.countdown == 1:
-			print("1 spellcast remaining")
+			player.ws.send("1 spellcast remaining")
+			player.opp.ws.send("1 spellcast remaining")
 
 
 
@@ -326,9 +349,11 @@ class Board():
 		### just prints some silly stuff.
 		### But this would be a good place to put any 'store the data'
 		### type code.
-		print("Game over-- the winner is " + winner.upper() + " !!!")
+		self.redplayer.ws.send("Game over-- the winner is " + winner.upper() + " !!!")
+		self.blueplayer.ws.send("Game over-- the winner is " + winner.upper() + " !!!")
 		for i in range(9):
-			print(winner.upper() + " VICTORY")
+			self.redplayer.ws.send(winner.upper() + " VICTORY")
+			self.blueplayer.ws.send(winner.upper() + " VICTORY")
 
 
 
@@ -525,6 +550,15 @@ class Player():
 		self.lock = None
 
 
+		### player.opp will be the opponent player object.
+		self.opp = None
+
+
+		### The player.ws attribute will be where we store
+		### the object which is the ws connection to each player.
+		self.ws = None
+
+
 
 	def taketurn(self, canmove = True, candash = True, cancharm = True, canspell = True):
 
@@ -552,11 +586,11 @@ class Player():
 
 
 
-		print("\nSelect an action:")
-		print(actions)
-		action = input()
+		self.ws.send("\nSelect an action:")
+		self.ws.send(str(actions))
+		action = self.ws.receive()
 		if action not in actions:
-			print("Invalid action!")
+			self.ws.send("Invalid action!")
 			self.taketurn(canmove, candash, cancharm, canspell)
 			return None
 
@@ -646,10 +680,11 @@ class Player():
 
 
 	def firstmove(self):
-		nodename = input("Where would you like to place your first stone? ")
+		self.ws.send("Where would you like to place your first stone? ")
+		nodename = self.ws.receive()
 		node = self.board.nodes[nodename]
 		if node.stone != None:
-			print("Invalid move-- your opponent started there!")
+			self.ws.send("Invalid move-- your opponent started there!")
 			self.firstmove()
 			return None
 		else:
@@ -658,7 +693,8 @@ class Player():
 
 
 	def move(self):
-		nodename = input("Where would you like to move? ")
+		self.ws.send("Where would you like to move? ")
+		nodename = self.ws.receive()
 		node = self.board.nodes[nodename]
 		adjacent = False
 		for neighbor in node.neighbors:
@@ -666,12 +702,12 @@ class Player():
 				adjacent = True
 
 		if node.stone == self.color:
-			print("Invalid move-- you already have a stone there!")
+			self.ws.send("Invalid move-- you already have a stone there!")
 			self.move()
 			return None
 
 		elif not adjacent:
-			print("Invalid move-- that's not adjacent to you!")
+			self.ws.send("Invalid move-- that's not adjacent to you!")
 			self.move()
 			return None
 
@@ -684,7 +720,8 @@ class Player():
 
 
 	def softmove(self):
-		nodename = input("Where would you like to soft move? ")
+		self.ws.send("Where would you like to soft move? ")
+		nodename = self.ws.receive()
 		node = self.board.nodes[nodename]
 		adjacent = False
 		for neighbor in node.neighbors:
@@ -695,23 +732,24 @@ class Player():
 			node.stone = self.color
 
 		elif node.stone == self.color:
-			print("Invalid move-- you already have a stone there!")
+			self.ws.send("Invalid move-- you already have a stone there!")
 			self.softmove()
 			return None
 
 		elif not adjacent:
-			print("Invalid move-- that's not adjacent to you!")
+			self.ws.send("Invalid move-- that's not adjacent to you!")
 			self.softmove()
 			return None
 
 		elif node.stone == self.enemy:
-			print("Invalid move-- that's not a soft move!")
+			self.ws.send("Invalid move-- that's not a soft move!")
 			self.softmove()
 			return None
 
 
 	def hardmove(self):
-		nodename = input("Where would you like to hard move? ")
+		self.ws.send("Where would you like to hard move? ")
+		nodename = self.ws.receive()
 		node = self.board.nodes[nodename]
 		adjacent = False
 		for neighbor in node.neighbors:
@@ -719,17 +757,17 @@ class Player():
 				adjacent = True
 
 		if not adjacent:
-			print("Invalid move-- that's not adjacent to you!")
+			self.ws.send("Invalid move-- that's not adjacent to you!")
 			self.hardmove()
 			return None
 
 		elif node.stone == self.color:
-			print("Invalid move-- you already have a stone there!")
+			self.ws.send("Invalid move-- you already have a stone there!")
 			self.hardmove()
 			return None
 
 		elif node.stone != self.enemy:
-			print("Invalid move-- that's not a hard move!")
+			self.ws.send("Invalid move-- that's not a hard move!")
 			self.hardmove()
 			return None
 
@@ -737,15 +775,17 @@ class Player():
 			self.pushenemy(node)
 
 	def dash(self):
-		sac1 = input("Select your first stone to sacrifice. ")
+		self.ws.send("Select your first stone to sacrifice. ")
+		sac1 = self.ws.receive()
 		if self.board.nodes[sac1].stone != self.color:
-			print("You do not have a stone there!")
+			self.ws.send("You do not have a stone there!")
 			self.dash()
 			return None
 
-		sac2 = input("Select your second stone to sacrifice. ")
+		self.ws.send("Select your second stone to sacrifice. ")
+		sac2 = self.ws.receive()
 		if (self.board.nodes[sac2].stone != self.color) or (sac2 == sac1):
-			print("You do not have a stone there!")
+			self.ws.send("You do not have a stone there!")
 			self.dash()
 			return None
 
@@ -767,7 +807,7 @@ class Player():
 		### This loop searches for a first valid pushing option
 		while pushingoptions == []:
 			if pushingqueue == []:
-				print("Enemy stone crushed!")
+				self.ws.send("Enemy stone crushed!")
 				self.board.update()
 				return None
 			nextpair = pushingqueue.pop(0)
@@ -797,14 +837,15 @@ class Player():
 		pushingoptionnames = [x.name for x in pushingoptions]
 
 		while True:
-			print("\nThe enemy stone can be pushed to: ", pushingoptionnames)
-			push = input("Where would you like to push it? ")
+			self.ws.send("\nThe enemy stone can be pushed to: "+ str(pushingoptionnames))
+			self.ws.send("Where would you like to push it? ")
+			push = self.ws.receive()
 			if push not in pushingoptionnames:
-				print("Invalid option!")
+				self.ws.send("Invalid option!")
 				continue
 			self.board.nodes[push].stone = self.enemy
 			self.board.update()
-			print("Enemy stone pushed to " + push)
+			self.ws.send("Enemy stone pushed to " + push)
 			break
 
 
@@ -822,6 +863,8 @@ board = Board()
 red = Player(board, 'red')
 blue = Player(board, 'blue')
 board.addplayers(red, blue)
+red.opp = blue
+blue.opp = red
 
 
 
@@ -830,42 +873,74 @@ gameover = False
 winner = None
 
 
-print("\nRed Turn 1")
-red.firstmove()
+app = Flask(__name__)
+sockets = Sockets(app)
 
-print("\nBlue Turn 1")
-blue.firstmove()
-
-
-while True:
-	turncounter += 1
-
-	if turncounter % 2 == 0:
-		activeplayer = red
-		whoseturn = 'red'
-	else:
-		activeplayer = blue
-		whoseturn = 'blue'
-
-	board.display(whoseturn)
-	activeplayer.bot_triggers(whoseturn)
-	if gameover:
-		board.end_game(winner)
-		break
-		
-
-	if whoseturn == 'red':
-		print("\n\n\nRed Turn " + str(turncounter // 2))
-		red.taketurn()
-	else:
-		print("\n\n\nBlue Turn " + str(turncounter // 2))
-		blue.taketurn()
+totalplayers = 0
 
 
-	activeplayer.eot_triggers(whoseturn)
-	if gameover:
-		board.end_game(winner)
-		break
+
+
+# The first player to join will be red.
+
+@sockets.route('/api/game')
+def playgame(ws):
+	global totalplayers
+	global turncounter
+	global gameover
+	global winner
+	totalplayers += 1
+	if totalplayers == 1:
+		red.ws = ws
+		red.ws.send("You are RED this game.")
+		red.ws.send("Waiting for opponent to join...")
+		while True:
+			gevent.sleep(10)
+
+	elif totalplayers == 2:
+		blue.ws = ws
+		blue.ws.send("You are BLUE this game.")
+		red.ws.send("Ready to play!")
+		blue.ws.send("Ready to play!")
+
+
+
+		red.ws.send("\nRed Turn 1")
+		red.firstmove()
+
+		blue.ws.send("\nBlue Turn 1")
+		blue.firstmove()
+
+
+		while True:
+			turncounter += 1
+
+			if turncounter % 2 == 0:
+				activeplayer = red
+				whoseturn = 'red'
+			else:
+				activeplayer = blue
+				whoseturn = 'blue'
+
+			board.display(whoseturn)
+			activeplayer.bot_triggers(whoseturn)
+			if gameover:
+				board.end_game(winner)
+				break
+				
+
+			if whoseturn == 'red':
+				red.ws.send("\n\n\nRed Turn " + str(turncounter // 2))
+				red.taketurn()
+			else:
+				blue.ws.send("\n\n\nBlue Turn " + str(turncounter // 2))
+				blue.taketurn()
+
+
+			activeplayer.eot_triggers(whoseturn)
+			if gameover:
+				board.end_game(winner)
+				break
 
 
 
