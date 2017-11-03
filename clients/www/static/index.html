@@ -1,12 +1,289 @@
 <head>
-  <title>Sigil</title>
+  <title>Sigil Online</title>
+
+  <style>
+
+  #chatBox {
+  width:20%;
+  height:20%;
+  border: 1px solid black;
+  }
+
+  #fullBoard {
+  position: relative;
+  top: 10px; left: 130px;
+  }
+
+  #board {
+  position: absolute;
+  width: 950px;
+  height: 950px;
+  }
+
+  #flourish1 {
+  position: absolute;
+  top: 529px;
+  left: 115px;
+  width: 191px;
+  height: 191px;
+  transform: rotate(59deg);
+  }
+
+  #flourish2 {
+  position: absolute;
+  top: 530.5px;
+  left: 648px;
+  width: 191px;
+  height: 191px;
+  transform: rotate(300deg);
+  }
+
+  #flourish3 {
+  position: absolute;
+  top: 71.5px;
+  left: 380px;
+  width: 191px;
+  height: 191px;
+  transform: rotate(180deg);
+}
+
+  #grow1 {
+  position:absolute;
+  top: 701.5px;
+  left: 399.5px;
+  width: 150px;
+  height: 150px;
+  }
+
+  #grow2 {
+  position:absolute;
+  top: 245px;
+  left: 665.5px;
+  width: 150px;
+  height: 150px;
+  transform: rotate(240deg);
+  }
+
+  #grow3 {
+  position:absolute;
+  top: 242px;
+  left: 137px;
+  width: 150px;
+  height: 150px;
+  transform: rotate(120deg);
+  }
+
+  #sprout1 {
+  position:absolute;
+  top: 584px;
+  left: 378px;
+  width: 93px;
+  height: 93px;
+  }
+
+  #sprout2 {
+  position:absolute;
+  top: 393px;
+  left: 595px;
+  width: 93px;
+  height: 93px;
+  transform: rotate(240deg);
+  }
+
+  #sprout3 {
+  position:absolute;
+  top: 301px;
+  left: 318px;
+  width: 93px;
+  height: 93px;
+  transform: rotate(120deg);
+  }
+
+  .redstone{
+  width: 30px;
+  height: 30px;
+  }
+
+  #reda1 {
+  position: absolute;
+  top: 500px;
+  left: 10px;
+  }
+
+  #reda2 {
+  position: absolute;
+  top: 500px;
+  left: 20px;
+  }
+
+  #reda3 {
+  position: absolute;
+  top: 500px;
+  left: 30px;
+  }
+
+  #reda4 {
+  position: absolute;
+  top: 500px;
+  left: 40px;
+  }
+
+  #reda5 {
+  position: absolute;
+  top: 500px;
+  left: 50px;
+  }
+
+  #reda6 {
+  position: absolute;
+  top: 500px;
+  left: 60px;
+  }
+
+  #reda7 {
+  position: absolute;
+  top: 500px;
+  left: 70px;
+  }
+
+  #reda8 {
+  position: absolute;
+  top: 500px;
+  left: 80px;
+  }
+
+  #reda9 {
+  position: absolute;
+  top: 500px;
+  left: 90px;
+  }
+
+  #reda10 {
+  position: absolute;
+  top: 500px;
+  left: 100px;
+  }
+
+  #reda11 {
+  position: absolute;
+  top: 500px;
+  left: 110px;
+  }
+
+  #reda12 {
+  position: absolute;
+  top: 500px;
+  left: 120px;
+  }
+
+  #reda13 {
+  position: absolute;
+  top: 741.5px;
+  left: 296.5px;
+  }
+
+
+
+  </style>
 </head>
 
 <script src="sigil.js"></script>
+
 <body onload="main();">
-  <div style="width:20%; height:50%; border: 1px solid black;" id="chatBox">
+  
+  <div id="fullBoard">
+
+    <div>
+      <img id="board" src="images/board.png"/>
+    </div>
+
+    <div >
+      <img id="flourish1" src="images/flourish.png">      
+    </div>
+
+    <div >
+      <img id="flourish2" src="images/flourish.png">      
+    </div>
+
+    <div >
+      <img id="flourish3" src="images/flourish.png">   		
+    </div>
+
+    <div >
+      <img id="grow1" src="images/grow.png">      
+    </div>
+
+    <div >
+      <img id="grow2" src="images/grow.png">      
+    </div>
+
+    <div >
+      <img id="grow3" src="images/grow.png">      
+    </div>
+
+    <div >
+      <img id="sprout1" src="images/sprout.png">      
+    </div>
+
+    <div >
+      <img id="sprout2" src="images/sprout.png">      
+    </div>
+
+    <div >
+      <img id="sprout3" src="images/sprout.png">      
+    </div>
+
+
+<!-- Red Stones -->
+    <div>
+      <img id ="reda1" class="redstone" src = "images/redstone.png">
+    </div>
+    <div>
+      <img id ="reda2" class="redstone" src = "images/redstone.png">
+    </div>
+    <div>
+      <img id ="reda3" class="redstone" src = "images/redstone.png">
+    </div>
+    <div>
+      <img id ="reda4" class="redstone" src = "images/redstone.png">
+    </div>
+    <div>
+      <img id ="reda5" class="redstone" src = "images/redstone.png">
+    </div>
+    <div>
+      <img id ="reda6" class="redstone" src = "images/redstone.png">
+    </div>
+    <div>
+      <img id ="reda7" class="redstone" src = "images/redstone.png">
+    </div>
+    <div>
+      <img id ="reda8" class="redstone" src = "images/redstone.png">
+    </div>
+    <div>
+      <img id ="reda9" class="redstone" src = "images/redstone.png">
+    </div>
+    <div>
+      <img id ="reda10" class="redstone" src = "images/redstone.png">
+    </div>
+    <div>
+      <img id ="reda11" class="redstone" src = "images/redstone.png">
+    </div>
+    <div>
+      <img id ="reda12" class="redstone" src = "images/redstone.png">
+    </div>
+    <div>
+      <img id ="reda13" class="redstone" src = "images/redstone.png">
+    </div>
+
+  <!-- End of Red Stones -->
+
+
+
+  </div>
+
+  <div id="chatBox">
     <b>Chats</b>
   </div>
   <input type="text" id="chatInput" onkeypress="chatInputKeypress();" />
-  <img src="Sigilplaymat.png" />
+
 </body>

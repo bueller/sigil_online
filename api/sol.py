@@ -1,6 +1,6 @@
 ### Sigil Online
 
-### BEGINNING DAEMONIZATION
+
 import json
 
 import gevent
