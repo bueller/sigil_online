@@ -839,9 +839,7 @@ class Player():
 
             self.ws.send(json.dumps(egress))
 
-            jmessage(self.ws, "\nThe enemy stone can be pushed to: " +
-                         str(pushingoptionnames))
-            jmessage(self.ws, "Where would you like to push it? ", "node")
+            jmessage(self.ws, "Where would you like to push the enemy stone? ", "node")
             ingress = self.ws.receive()
             push = json.loads(ingress)['message']
             if push not in pushingoptionnames:

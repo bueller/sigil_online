@@ -31,126 +31,126 @@
 
   #redlock_a_big_solo {
   position: absolute;
-  top: 668px;
-  left: 80px;
-  transform: rotate(60deg)
+  top: 670px;
+  left: 79px;
+  transform: rotate(240deg)
   }
 
   #redlock_b_big_solo {
   position: absolute;
   top: 667px;
   left: 826px;
-  transform: rotate(300deg);
+  transform: rotate(120deg);
   }
 
   #redlock_c_big_solo {
   position: absolute;
-  top: 22px;
-  left: 452px;
-  transform: rotate(180deg);
+  top: 16px;
+  left: 450px;
   }
 
   #redlock_a_med_solo {
   position: absolute;
-  top: 865px;
+  top: 868px;
   left: 450px;
+  transform: rotate(180deg);
   }
 
   #redlock_b_med_solo {
   position: absolute;
-  top: 247px;
-  left: 810px;
-  transform: rotate(240deg);
+  top: 244px;
+  left: 813px;
+  transform: rotate(60deg);
   }
 
   #redlock_c_med_solo {
   position: absolute;
-  top: 242px;
-  left: 97px;
-  transform: rotate(120deg);
+  top: 241px;
+  left: 93px;
+  transform: rotate(300deg);
   }
 
 #bluelock_a_big_solo {
   position: absolute;
-  top: 668px;
-  left: 80px;
-  transform: rotate(60deg)
+  top: 670px;
+  left: 79px;
+  transform: rotate(240deg);
   }
 
   #bluelock_b_big_solo {
   position: absolute;
   top: 667px;
   left: 826px;
-  transform: rotate(300deg);
+  transform: rotate(120deg);
   }
 
   #bluelock_c_big_solo {
   position: absolute;
-  top: 22px;
-  left: 452px;
-  transform: rotate(180deg);
+  top: 16px;
+  left: 450px;
   }
 
   #bluelock_a_med_solo {
   position: absolute;
-  top: 865px;
+  top: 868px;
   left: 450px;
+  transform: rotate(180deg);
   }
 
   #bluelock_b_med_solo {
   position: absolute;
-  top: 247px;
-  left: 810px;
-  transform: rotate(240deg);
+  top: 244px;
+  left: 813px;
+  transform: rotate(60deg);
   }
 
   #bluelock_c_med_solo {
   position: absolute;
-  top: 242px;
-  left: 97px;
-  transform: rotate(120deg);
+  top: 241px;
+  left: 93px;
+  transform: rotate(300deg);
   }
 
   #bluelock_a_big_duo {
   position: absolute;
   top: 708px;
-  left: 115px;
-  transform: rotate(40deg)
+  left: 113px;
+  transform: rotate(220deg)
   }
 
   #bluelock_b_big_duo {
   position: absolute;
   top: 617px;
   left: 845px;
-  transform: rotate(280deg);
+  transform: rotate(100deg);
   }
 
   #bluelock_c_big_duo {
   position: absolute;
-  top: 32px;
-  left: 399px;
-  transform: rotate(160deg);
+  top: 25px;
+  left: 397px;
+  transform: rotate(340deg);
   }
 
   #bluelock_a_med_duo {
   position: absolute;
-  top: 853px;
-  left: 503px;
-  transform: rotate(340deg);
+  top: 859px;
+  left: 502px;
+  transform: rotate(160deg);
   }
 
   #bluelock_b_med_duo {
   position: absolute;
-  top: 208px;
-  left: 773px;
-  transform: rotate(220deg);
+  top: 204px;
+  left: 776px;
+  transform: rotate(40deg);
   }
 
   #bluelock_c_med_duo {
   position: absolute;
   top: 292px;
-  left: 83px;
-  transform: rotate(100deg);
+  left: 80px;
+  transform: rotate(280deg);
   }
 
 
