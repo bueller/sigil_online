@@ -58,8 +58,8 @@ class Spell():
         ### sacrifice all stones in it, and refill appropriate
         ### number based on sigils
         pname = player.color[0].upper() + player.color[1:]
-        player.ws.send(pname + " casts " + self.name)
-        player.opp.ws.send(pname + " casts " + self.name)
+        jmessage(player.ws, pname + " casts " + self.name)
+        jmessage(player.opp.ws, pname + " casts " + self.name)
         if self.ischarm:
             for node in self.position:
                 node.stone = None
@@ -81,19 +81,22 @@ class Spell():
                 refills = self.one_sigil_refill + self.two_sigil_refill
 
             if refills > 1:
-                player.ws.send("You get to keep {} stones in ".format(refills)
+                jmessage(player.ws, "You get to keep {} stones in ".format(refills)
                                + self.name + ".")
             elif refills == 1:
-                player.ws.send("You get to keep 1 stone in " + self.name + ".")
+                jmessage(player.ws, "You get to keep 1 stone in " + self.name + ".")
 
             while refills > 0:
-                player.ws.send("Select a stone to keep: ")
-                keep = player.ws.receive()
+                jmessage(player.ws, "Select a stone to keep: ", "node")
+
+                ingress = player.ws.receive()
+                keep = json.loads(ingress)['message']
+                
                 if self.board.nodes[keep] not in self.position:
-                    player.ws.send("That's not a node in your spell!")
+                    (player.ws, "That's not a node in your spell!")
 
                 elif self.board.nodes[keep].stone != None:
-                    player.ws.send("You already kept that stone!")
+                    jmessage(player.ws, "You already kept that stone!")
                     continue
                 else:
                     refills -= 1
@@ -207,14 +210,27 @@ class Board():
         self.countdown = 7
 
     def update(self):
+
+        ### Updates the visual board display.
         ### Updates the status of all the spells.
         ### These statuses will be stored
         ### in the 'charged_spells' attributes of players.
 
-        ### Also updates the players' 'sigils' attributes.
+        ### Also updates the players' 'sigils' and 'totalstones' attributes.
 
         ### board.update() MUST BE CALLED WHENEVER
         ### ANY STONE CHANGES POSITION!
+        redtotalstones = 0
+        bluetotalstones = 0
+        for name in self.nodes:
+            color = self.nodes[name].stone
+            if color == 'red':
+                redtotalstones += 1
+            elif color == 'blue':
+                bluetotalstones += 1
+        self.redplayer.totalstones = redtotalstones
+        self.blueplayer.totalstones = bluetotalstones
+
 
         redcharged = []
         bluecharged = []
@@ -240,6 +256,22 @@ class Board():
         self.redplayer.sigils = redsigils
         self.blueplayer.sigils = bluesigils
 
+
+
+        ### Sends a json dictionary to the players.
+
+        jboard = {"type": "boardstate", }
+
+        for name in self.nodes:
+            jboard[name] = self.nodes[name].stone
+
+        self.redplayer.ws.send(json.dumps(jboard))
+        self.blueplayer.ws.send(json.dumps(jboard))
+
+
+
+
+
     def display(self, whoseturn):
         ### Displays the current board state.
         ### Gets called at the BEGINNING of each turn.
@@ -256,61 +288,63 @@ class Board():
                 redlist.append(name)
             elif color == 'blue':
                 bluelist.append(name)
-        player.ws.send("\n\n\nRed stones: " + str(redlist))
-        player.ws.send("Blue stones: " + str(bluelist))
-        player.opp.ws.send("\n\n\nRed stones: " + str(redlist))
-        player.opp.ws.send("Blue stones: " + str(bluelist))
+       
+
+        jmessage(player.ws, "\n\n\nTotal Red stones: " + str(self.redplayer.totalstones))
+        jmessage(player.opp.ws, "\n\n\nTotal Red stones: " + str(self.redplayer.totalstones))
+        jmessage(player.ws, "\n\n\nTotal Blue stones: " + str(self.blueplayer.totalstones))
+        jmessage(player.opp.ws, "\n\n\nTotal Blue stones: " + str(self.blueplayer.totalstones))
+
 
         redtotal = len(redlist)
         bluetotal = len(bluelist) + 1
         if whoseturn == 'red':
             if bluetotal > redtotal:
-                player.ws.send("Blue is winning by " +
+                jmessage(player.ws, "Blue is winning by " +
                                str(bluetotal - redtotal))
-                player.opp.ws.send("Blue is winning by " +
+                jmessage(player.opp.ws, "Blue is winning by " +
                                    str(bluetotal - redtotal))
             else:
-                player.ws.send("Red is winning by " +
+                jmessage(player.ws, "Red is winning by " +
                                str(redtotal + 1 - bluetotal))
-                player.opp.ws.send("Red is winning by " +
+                jmessage(player.opp.ws, "Red is winning by " +
                                    str(redtotal + 1 - bluetotal))
         elif whoseturn == 'blue':
             if redtotal > bluetotal:
-                player.ws.send("Red is winning by " +
+                jmessage(player.ws, "Red is winning by " +
                                str(redtotal - bluetotal))
-                player.opp.ws.send("Red is winning by " +
+                jmessage(player.opp.ws, "Red is winning by " +
                                    str(redtotal - bluetotal))
             else:
-                player.ws.send("Blue is winning by " +
+                jmessage(player.ws, "Blue is winning by " +
                                str(bluetotal + 1 - redtotal))
-                player.opp.ws.send("Blue is winning by " +
+                jmessage(player.opp.ws, "Blue is winning by " +
                                    str(bluetotal + 1 - redtotal))
 
-        player.ws.send("Red Sigils: " + str(red.sigils))
-        player.opp.ws.send("Red Sigils: " + str(red.sigils))
+        jmessage(player.ws, "Red Sigils: " + str(red.sigils))
+        jmessage(player.opp.ws, "Red Sigils: " + str(red.sigils))
 
-        player.ws.send("Blue Sigils: " + str(blue.sigils))
-        player.opp.ws.send("Blue Sigils: " + str(blue.sigils))
+        jmessage(player.ws, "Blue Sigils: " + str(blue.sigils))
+        jmessage(player.opp.ws, "Blue Sigils: " + str(blue.sigils))
         if self.countdown > 1:
-            player.ws.send("{} spellcasts remaining".format(self.countdown))
-            player.opp.ws.send(
-                "{} spellcasts remaining".format(self.countdown))
+            jmessage(player.ws, "{} spellcasts remaining".format(self.countdown))
+            jmessage(player.opp.ws, "{} spellcasts remaining".format(self.countdown))
         elif self.countdown == 1:
-            player.ws.send("1 spellcast remaining")
-            player.opp.ws.send("1 spellcast remaining")
+            jmessage(player.ws, "1 spellcast remaining")
+            jmessage(player.opp.ws, "1 spellcast remaining")
 
     def end_game(self, winner):
         ### Right now this doesn't DO anything special,
         ### just prints some silly stuff.
         ### But this would be a good place to put any 'store the data'
         ### type code.
-        self.redplayer.ws.send("Game over-- the winner is " + winner.upper() +
+        jmessage(self.redplayer.ws, "Game over-- the winner is " + winner.upper() +
                                " !!!")
-        self.blueplayer.ws.send("Game over-- the winner is " + winner.upper() +
+        jmessage(self.blueplayer.ws, "Game over-- the winner is " + winner.upper() +
                                 " !!!")
         for i in range(9):
-            self.redplayer.ws.send(winner.upper() + " VICTORY")
-            self.blueplayer.ws.send(winner.upper() + " VICTORY")
+            jmessage(self.redplayer.ws, winner.upper() + " VICTORY")
+            jmessage(self.blueplayer.ws, winner.upper() + " VICTORY")
 
     def make_board(self):
         nodelist = []
@@ -475,6 +509,9 @@ class Player():
         else:
             self.enemy = 'red'
 
+        ### totalstones does NOT include the extra blue stone in the center.
+        self.totalstones = 0
+
         ### charged_spells is a list of which spell objects
         ### are currently charged for this player.
         ### Gets updated whenever board.update() is called.
@@ -493,18 +530,16 @@ class Player():
         ### the object which is the ws connection to each player.
         self.ws = None
 
-    def taketurn(self,
-                 canmove=True,
-                 candash=True,
-                 cancharm=True,
-                 canspell=True):
+    def taketurn(self, canmove=True, candash=True, cancharm=True, canspell=True):
+
+        self.board.update()
 
         actions = []
         charmlist = []
         spelllist = []
         if canmove:
             actions.append('move')
-        if candash:
+        if (candash & (self.totalstones > 2)):
             actions.append('dash')
         if cancharm:
             self.board.update()
@@ -521,15 +556,39 @@ class Player():
                         spelllist.append(spell.name)
             actions.append('pass')
 
-        self.ws.send("\nSelect an action:")
-        self.ws.send(str(actions))
-        action = self.ws.receive()
-        if action not in actions:
-            self.ws.send("Invalid action!")
+        jmessage(self.ws, "\nSelect an action:")
+
+
+        egress =  {"type": "message", "message": str(actions), 
+        "awaiting": "action", "actionlist": actions}
+
+        self.ws.send(json.dumps(egress))
+
+
+        ingress = self.ws.receive()
+        action = json.loads(ingress)['message']
+
+
+        ### This clause performs the 'move' action with the node name preloaded.
+        ### In this case action == the name of a node.
+
+        if 'move' in actions:
+            shortcuts = self.board.nodes.keys()
+        else:
+            shortcuts = []
+
+
+        if action not in actions and action not in shortcuts:
+            jmessage(self.ws, "Invalid action!")
             self.taketurn(canmove, candash, cancharm, canspell)
             return None
 
-        if action == 'move':
+        elif action in shortcuts:
+            self.move(action)
+            self.taketurn(False, candash, cancharm, canspell)
+            return None
+
+        elif action == 'move':
             self.move()
             self.taketurn(False, candash, cancharm, canspell)
             return None
@@ -600,20 +659,33 @@ class Player():
                     winner = a[0]
 
     def firstmove(self):
-        self.ws.send("Where would you like to place your first stone? ")
-        nodename = self.ws.receive()
+        jmessage(self.ws, "Where would you like to place your first stone? ", "node")
+
+        ingress = self.ws.receive()
+        nodename = json.loads(ingress)['message']
+
+
+
+
         node = self.board.nodes[nodename]
         if node.stone != None:
-            self.ws.send("Invalid move-- your opponent started there!")
+            jmessage(self.ws, "Invalid move-- your opponent started there!")
             self.firstmove()
             return None
         else:
             node.stone = self.color
             self.board.update()
 
-    def move(self):
-        self.ws.send("Where would you like to move? ")
-        nodename = self.ws.receive()
+    def move(self, preloaded = False):
+        ### If the user clicked on a node while they had 'move' action available,
+        ### we call this move function with preloaded == the node they clicked.
+        if not preloaded:
+            jmessage(self.ws, "Where would you like to move? ", "node")
+            ingress = self.ws.receive()
+            nodename = json.loads(ingress)['message']
+        else:
+            nodename = preloaded
+
         node = self.board.nodes[nodename]
         adjacent = False
         for neighbor in node.neighbors:
@@ -621,12 +693,12 @@ class Player():
                 adjacent = True
 
         if node.stone == self.color:
-            self.ws.send("Invalid move-- you already have a stone there!")
+            jmessage(self.ws, "Invalid move-- you already have a stone there!")
             self.move()
             return None
 
         elif not adjacent:
-            self.ws.send("Invalid move-- that's not adjacent to you!")
+            jmessage(self.ws, "Invalid move-- that's not adjacent to you!")
             self.move()
             return None
 
@@ -638,8 +710,9 @@ class Player():
             self.pushenemy(node)
 
     def softmove(self):
-        self.ws.send("Where would you like to soft move? ")
-        nodename = self.ws.receive()
+        jmessage(self.ws, "Where would you like to soft move? ", "node")
+        ingress = self.ws.receive()
+        nodename = json.loads(ingress)['message']
         node = self.board.nodes[nodename]
         adjacent = False
         for neighbor in node.neighbors:
@@ -648,25 +721,27 @@ class Player():
 
         if node.stone == None and adjacent:
             node.stone = self.color
+            self.board.update()
 
         elif node.stone == self.color:
-            self.ws.send("Invalid move-- you already have a stone there!")
+            jmessage(self.ws, "Invalid move-- you already have a stone there!")
             self.softmove()
             return None
 
         elif not adjacent:
-            self.ws.send("Invalid move-- that's not adjacent to you!")
+            jmessage(self.ws, "Invalid move-- that's not adjacent to you!")
             self.softmove()
             return None
 
         elif node.stone == self.enemy:
-            self.ws.send("Invalid move-- that's not a soft move!")
+            jmessage(self.ws, "Invalid move-- that's not a soft move!")
             self.softmove()
             return None
 
     def hardmove(self):
-        self.ws.send("Where would you like to hard move? ")
-        nodename = self.ws.receive()
+        jmessage(self.ws, "Where would you like to hard move? ", "node")
+        ingress = self.ws.receive()
+        nodename = json.loads(ingress)['message']
         node = self.board.nodes[nodename]
         adjacent = False
         for neighbor in node.neighbors:
@@ -674,17 +749,17 @@ class Player():
                 adjacent = True
 
         if not adjacent:
-            self.ws.send("Invalid move-- that's not adjacent to you!")
+            jmessage(self.ws, "Invalid move-- that's not adjacent to you!")
             self.hardmove()
             return None
 
         elif node.stone == self.color:
-            self.ws.send("Invalid move-- you already have a stone there!")
+            jmessage(self.ws, "Invalid move-- you already have a stone there!")
             self.hardmove()
             return None
 
         elif node.stone != self.enemy:
-            self.ws.send("Invalid move-- that's not a hard move!")
+            jmessage(self.ws, "Invalid move-- that's not a hard move!")
             self.hardmove()
             return None
 
@@ -692,17 +767,20 @@ class Player():
             self.pushenemy(node)
 
     def dash(self):
-        self.ws.send("Select your first stone to sacrifice. ")
-        sac1 = self.ws.receive()
+        jmessage(self.ws, "Select your first stone to sacrifice. ", "node")
+        
+        ingress = self.ws.receive()
+        sac1 = json.loads(ingress)['message']
         if self.board.nodes[sac1].stone != self.color:
-            self.ws.send("You do not have a stone there!")
+            jmessage(self.ws, "You do not have a stone there!")
             self.dash()
             return None
 
-        self.ws.send("Select your second stone to sacrifice. ")
-        sac2 = self.ws.receive()
+        jmessage(self.ws, "Select your second stone to sacrifice. ", "node")
+        ingress = self.ws.receive()
+        sac2 = json.loads(ingress)['message']
         if (self.board.nodes[sac2].stone != self.color) or (sac2 == sac1):
-            self.ws.send("You do not have a stone there!")
+            jmessage(self.ws, "You do not have a stone there!")
             self.dash()
             return None
 
@@ -721,7 +799,7 @@ class Player():
         ### This loop searches for a first valid pushing option
         while pushingoptions == []:
             if pushingqueue == []:
-                self.ws.send("Enemy stone crushed!")
+                jmessage(self.ws, "Enemy stone crushed!")
                 self.board.update()
                 return None
             nextpair = pushingqueue.pop(0)
@@ -751,16 +829,17 @@ class Player():
         pushingoptionnames = [x.name for x in pushingoptions]
 
         while True:
-            self.ws.send("\nThe enemy stone can be pushed to: " +
+            jmessage(self.ws, "\nThe enemy stone can be pushed to: " +
                          str(pushingoptionnames))
-            self.ws.send("Where would you like to push it? ")
-            push = self.ws.receive()
+            jmessage(self.ws, "Where would you like to push it? ", "node")
+            ingress = self.ws.receive()
+            push = json.loads(ingress)['message']
             if push not in pushingoptionnames:
-                self.ws.send("Invalid option!")
+                jmessage(self.ws, "Invalid option!")
                 continue
             self.board.nodes[push].stone = self.enemy
             self.board.update()
-            self.ws.send("Enemy stone pushed to " + push)
+            jmessage(self.ws, "Enemy stone pushed to " + push)
             break
 
 
@@ -769,6 +848,11 @@ class Player():
 ### First we set up the objects.  This is my hack-y way of passing
 ### everyone as parameters to everyone else: doing it
 ### in two layers, using the board.addplayers method
+
+
+def jmessage(player, message, awaiting= None):
+    egress =  {"type": "message", "message": message, "awaiting": awaiting, }
+    player.send(json.dumps(egress))
 
 board = Board()
 red = Player(board, 'red')
@@ -799,21 +883,21 @@ def playgame(ws):
     totalplayers += 1
     if totalplayers == 1:
         red.ws = ws
-        red.ws.send("You are RED this game.")
-        red.ws.send("Waiting for opponent to join...")
+        jmessage(red.ws, "You are RED this game.")
+        jmessage(red.ws, "Waiting for opponent to join...")
         while True:
             gevent.sleep(10)
 
     elif totalplayers == 2:
         blue.ws = ws
-        blue.ws.send("You are BLUE this game.")
-        red.ws.send("Ready to play!")
-        blue.ws.send("Ready to play!")
+        jmessage(blue.ws,"You are BLUE this game.")
+        jmessage(red.ws,"Ready to play!")
+        jmessage(blue.ws,"Ready to play!")
 
-        red.ws.send("\nRed Turn 1")
+        jmessage(red.ws,"\nRed Turn 1")
         red.firstmove()
 
-        blue.ws.send("\nBlue Turn 1")
+        jmessage(blue.ws,"\nBlue Turn 1")
         blue.firstmove()
 
         while True:
@@ -833,10 +917,10 @@ def playgame(ws):
                 break
 
             if whoseturn == 'red':
-                red.ws.send("\n\n\nRed Turn " + str(turncounter // 2))
+                jmessage(red.ws,"\nRed Turn " + str(turncounter // 2))
                 red.taketurn()
             else:
-                blue.ws.send("\n\n\nBlue Turn " + str(turncounter // 2))
+                jmessage(blue.ws,"\nBlue Turn " + str(turncounter // 2))
                 blue.taketurn()
 
             activeplayer.eot_triggers(whoseturn)
@@ -862,5 +946,14 @@ def chat(ws):
                 "player": index,
                 "message": message,
         }
-        for i, chat in enumerate(chats):
+        for chat in chats:
             chat.send(json.dumps(egress))
+
+
+
+
+
+
+
+
+

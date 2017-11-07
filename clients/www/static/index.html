@@ -1,345 +1,7 @@
 <head>
   <title>Sigil Online</title>
 
-  <style>
-
-  #chatBox {
-  width:20%;
-  height:20%;
-  border: 1px solid black;
-  }
-
-  #fullBoard {
-  position: relative;
-  top: 10px; left: 130px;
-  }
-
-  #board {
-  position: absolute;
-  width: 950px;
-  height: 950px;
-  }
-
-  #flourish1 {
-  position: absolute;
-  top: 529px;
-  left: 115px;
-  width: 191px;
-  height: 191px;
-  transform: rotate(59deg);
-  }
-
-  #flourish2 {
-  position: absolute;
-  top: 530.5px;
-  left: 648px;
-  width: 191px;
-  height: 191px;
-  transform: rotate(300deg);
-  }
-
-  #flourish3 {
-  position: absolute;
-  top: 71.5px;
-  left: 380px;
-  width: 191px;
-  height: 191px;
-  transform: rotate(180deg);
-}
-
-  #grow1 {
-  position:absolute;
-  top: 701.5px;
-  left: 399.5px;
-  width: 150px;
-  height: 150px;
-  }
-
-  #grow2 {
-  position:absolute;
-  top: 245px;
-  left: 665.5px;
-  width: 150px;
-  height: 150px;
-  transform: rotate(240deg);
-  }
-
-  #grow3 {
-  position:absolute;
-  top: 242px;
-  left: 137px;
-  width: 150px;
-  height: 150px;
-  transform: rotate(120deg);
-  }
-
-  #sprout1 {
-  position:absolute;
-  top: 584px;
-  left: 378px;
-  width: 93px;
-  height: 93px;
-  }
-
-  #sprout2 {
-  position:absolute;
-  top: 393px;
-  left: 595px;
-  width: 93px;
-  height: 93px;
-  transform: rotate(240deg);
-  }
-
-  #sprout3 {
-  position:absolute;
-  top: 301px;
-  left: 318px;
-  width: 93px;
-  height: 93px;
-  transform: rotate(120deg);
-  }
-
-  .redstone{
-  width: 30px;
-  height: 30px;
-  }
-
-  #reda1 {
-  position: absolute;
-  top: 556px;
-  left: 53px;
-  }
-
-  #reda2 {
-  position: absolute;
-  top: 638px;
-  left: 148px;
-  }
-
-  #reda3 {
-  position: absolute;
-  top: 663px;
-  left: 207.5px;
-  }
-
-  #reda4 {
-  position: absolute;
-  top: 614px;
-  left: 250px;
-  }
-
-  #reda5 {
-  position: absolute;
-  top: 559px;
-  left: 217px;
-  }
-
-  #reda6 {
-  position: absolute;
-  top: 573.5px;
-  left: 154px;
-  }
-
-  #reda7 {
-  position: absolute;
-  top: 615px;
-  left: 410px;
-  }
-
-  #reda8 {
-  position: absolute;
-  top: 721px;
-  left: 459px;
-  }
-
-  #reda9 {
-  position: absolute;
-  top: 782.5px;
-  left: 495px;
-  }
-
-  #reda10 {
-  position: absolute;
-  top: 782.3px;
-  left: 423.6px;
-  }
-
-  #reda11 {
-  position: absolute;
-  top: 459px;
-  left: 132.5px;
-  }
-
-  #reda12 {
-  position: absolute;
-  top: 446px;
-  left: 283px;
-  }
-
-  #reda13 {
-  position: absolute;
-  top: 741.5px;
-  left: 296.5px;
-  }
-
-  #redb1 {
-  position: absolute;
-  top: 763.5px;
-  left: 745.5px;
-  }
-
-  #redb2 {
-  position: absolute;
-  top: 639px;
-  left: 776px;
-  }
-
-  #redb3 {
-  position: absolute;
-  top: 575px;
-  left: 769px;
-  }
-
-  #redb4 {
-  position: absolute;
-  top: 561px;
-  left: 706px;
-  }
-
-  #redb5 {
-  position: absolute;
-  top: 617px;
-  left: 673.5px;
-  }
-
-  #redb6 {
-  position: absolute;
-  top: 665px;
-  left: 717px;
-  }
-
-  #redb7 {
-  position: absolute;
-  top: 422px;
-  left: 628px;
-  }
-
-  #redb8 {
-  position: absolute;
-  top: 325.6px;
-  left: 690.2px;
-  }
-
-  #redb9 {
-  position: absolute;
-  top: 325.6px;
-  left: 761px;
-  }
-
-  #redb10 {
-  position: absolute;
-  top: 264px;
-  left: 725.5px;
-  }
-
-  #redb11 {
-  position: absolute;
-  top: 744px;
-  left: 626px;
-  }
-
-  #redb12 {
-  position: absolute;
-  top: 616.5px;
-  left: 542px;
-  }
-
-  #redb13 {
-  position: absolute;
-  top: 458.6px;
-  left: 789px;
-  }
-
-  #redc1 {
-  position: absolute;
-  top: 58px;
-  left: 579px;
-  }
-
-  #redc2 {
-  position: absolute;
-  top: 97px;
-  left: 460.6px;
-  }
-
-  #redc3 {
-  position: absolute;
-  top: 135px;
-  left: 408.5px;
-  }
-
-  #redc4 {
-  position: absolute;
-  top: 196.5px;
-  left: 428.5px;
-  }
-
-  #redc5 {
-  position: absolute;
-  top: 196.5px;
-  left: 493px;
-  }
-
-  #redc6 {
-  position: absolute;
-  top: 135px;
-  left: 513px;
-  }
-
-  #redc7 {
-  position: absolute;
-  top: 332px;
-  left: 349px;
-  }
-
-  #redc8 {
-  position: absolute;
-  top: 322px;
-  left: 232px;
-  }
-
-  #redc9 {
-  position: absolute;
-  top: 261px;
-  left: 196.5px;
-  }
-
-  #redc10 {
-  position: absolute;
-  top: 322.4px;
-  left: 161px;
-  }
-
-  #redc11 {
-  position: absolute;
-  top: 174.6px;
-  left: 622.5px;
-  }
-
-  #redc12 {
-  position: absolute;
-  top: 310.5px;
-  left: 559.5px;
-  }
-
-  #redc13 {
-  position: absolute;
-  top: 168px;
-  left: 295px;
-  }
-
-
-  </style>
+  <link rel="stylesheet" href="sigil.css">
 </head>
 
 <script src="sigil.js"></script>
@@ -519,11 +181,176 @@
 
 
 
+
+  <!-- Blue Stones -->
+    <div>
+      <img id ="bluea1" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluea2" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluea3" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluea4" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluea5" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluea6" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluea7" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluea8" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluea9" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluea10" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluea11" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluea12" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluea13" class="bluestone" src = "images/bluestone.png">
+    </div>
+
+
+
+    <div>
+      <img id ="blueb1" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="blueb2" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="blueb3" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="blueb4" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="blueb5" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="blueb6" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="blueb7" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="blueb8" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="blueb9" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="blueb10" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="blueb11" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="blueb12" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="blueb13" class="bluestone" src = "images/bluestone.png">
+    </div>
+
+
+    <div>
+      <img id ="bluec1" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluec2" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluec3" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluec4" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluec5" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluec6" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluec7" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluec8" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluec9" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluec10" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluec11" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluec12" class="bluestone" src = "images/bluestone.png">
+    </div>
+    <div>
+      <img id ="bluec13" class="bluestone" src = "images/bluestone.png">
+    </div>
+
+
+
+  <!-- End of blue Stones -->
+
+
+
+
   </div>
 
+<!--
   <div id="chatBox">
-    <b>Chats</b>
+    <b>Chat</b>
   </div>
   <input type="text" id="chatInput" onkeypress="chatInputKeypress();" />
 
+-->
+
+  <div id="actionBox">
+    <b>Console</b>
+  </div>
+  <input type="text" id="actionInput" onkeypress="actionInputKeypress();" />
+
+
+  <div>
+    <button type="button" id="dashbutton">
+      <b>Dash</b>
+    </button>
+  </div>
+
+  <div>
+    <button type="button" id="passbutton">
+      <b>Pass</b>
+    </button>
+  </div>
+  
 </body>
+
+
+
+
+
+
+
+
+
+
+
+
