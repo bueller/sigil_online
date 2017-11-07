@@ -335,7 +335,7 @@ class Board():
                                " !!!")
         jmessage(self.blueplayer.ws, "Game over-- the winner is " + winner.upper() +
                                 " !!!")
-        for i in range(9):
+        for i in range(3):
             jmessage(self.redplayer.ws, winner.upper() + " VICTORY")
             jmessage(self.blueplayer.ws, winner.upper() + " VICTORY")
 
@@ -794,6 +794,7 @@ class Player():
 
     def pushenemy(self, node):
         node.stone = self.color
+        self.board.update()
         ### push the enemy stone. Return a list of options
         ### for where to push it.
         pushingqueue = [(x, 1) for x in node.neighbors]
@@ -832,6 +833,12 @@ class Player():
         pushingoptionnames = [x.name for x in pushingoptions]
 
         while True:
+            egress = {"type": "pushingoptions", }
+            for nodename in pushingoptionnames:
+                egress[nodename] = self.enemy
+
+            self.ws.send(json.dumps(egress))
+
             jmessage(self.ws, "\nThe enemy stone can be pushed to: " +
                          str(pushingoptionnames))
             jmessage(self.ws, "Where would you like to push it? ", "node")
@@ -853,7 +860,11 @@ class Player():
 ### in two layers, using the board.addplayers method
 
 
+
+
 def jmessage(player, message, awaiting= None):
+    ### The 'player' parameter here is not a player object,
+    ### but rather player.ws
     egress =  {"type": "message", "message": message, "awaiting": awaiting, }
     player.send(json.dumps(egress))
 

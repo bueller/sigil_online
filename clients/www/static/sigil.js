@@ -160,7 +160,15 @@ function incomingEvent(event) {
     
   } else if (payload.type == "boardstate") {
     updateBoard(payload);
+  } else if (payload.type == "pushingoptions") {
+    for (nodename of allnodenames) {
+      if (payload[nodename]) {
+        document.getElementById(payload[nodename] + nodename).style.opacity = .5;
+      };
+    };
   };
+
+
   if (payload.awaiting) {
     awaiting = payload.awaiting;
   };
