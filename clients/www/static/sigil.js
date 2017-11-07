@@ -53,6 +53,30 @@ function main() {
   document.getElementById("passbutton").addEventListener(
     'click', function() {passClick(this);}, false);
 
+
+  lockdict = {
+    "Flourish1red": "redlock_a_big_solo",
+    "Flourish2red": "redlock_b_big_solo",
+    "Flourish3red": "redlock_c_big_solo",
+    "Grow1red": "redlock_a_med_solo",
+    "Grow2red": "redlock_b_med_solo",
+    "Grow3red": "redlock_c_med_solo",
+
+    "Flourish1blue": "bluelock_a_big_solo",
+    "Flourish2blue": "bluelock_b_big_solo",
+    "Flourish3blue": "bluelock_c_big_solo",
+    "Grow1blue": "bluelock_a_med_solo",
+    "Grow2blue": "bluelock_b_med_solo",
+    "Grow3blue": "bluelock_c_med_solo",
+
+    "Flourish1blue2": "bluelock_a_big_duo",
+    "Flourish2blue2": "bluelock_b_big_duo",
+    "Flourish3blue2": "bluelock_c_big_duo",
+    "Grow1blue2": "bluelock_a_med_duo",
+    "Grow2blue2": "bluelock_b_med_duo",
+    "Grow3blue2": "bluelock_c_med_duo",
+  };
+
 }
 
 
@@ -131,6 +155,9 @@ function incomingEvent(event) {
   var box = document.getElementById('actionBox');
   if (payload.type == "message") {
     box.innerHTML += "<br/>" + payload.message;
+
+    box.scrollTop = box.scrollHeight;
+    
   } else if (payload.type == "boardstate") {
     updateBoard(payload);
   };
@@ -158,6 +185,9 @@ function incomingEvent(event) {
 
 
 function updateBoard(boardstate) {
+
+  console.log("Board Update");
+  
   for (var name of allnodenames) {
     if (boardstate[name] == "red") {
       document.getElementById("blue" + name).style.opacity = 0;
@@ -168,12 +198,30 @@ function updateBoard(boardstate) {
     } else {
       document.getElementById("red" + name).style.opacity = 0;
       document.getElementById("blue" + name).style.opacity = 0;
-    };
+      };
     
  
-  };
+    };
 
 
+    for (var lock in lockdict) {
+      document.getElementById(lockdict[lock]).style.opacity = 0;
+    };
+
+    var redlockedspellname = boardstate["redlock"];
+    var bluelockedspellname = boardstate["bluelock"];
+
+    if (redlockedspellname){
+      document.getElementById(lockdict[redlockedspellname + "red"]).style.opacity = 1;
+    };
+
+    if (bluelockedspellname) {
+      if (redlockedspellname == bluelockedspellname) {
+        document.getElementById(lockdict[bluelockedspellname + "blue2"]).style.opacity = 1;
+      } else {
+        document.getElementById(lockdict[bluelockedspellname + "blue"]).style.opacity = 1;
+      };
+    };
   }
 
 

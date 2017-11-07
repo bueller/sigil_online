@@ -259,17 +259,19 @@ class Board():
 
 
         ### Sends a json dictionary to the players.
+        ### Tells which stones are where, and also which locks are where.
 
         jboard = {"type": "boardstate", }
-
         for name in self.nodes:
             jboard[name] = self.nodes[name].stone
 
+        if self.redplayer.lock:
+            jboard["redlock"] = self.redplayer.lock.name
+        if self.blueplayer.lock:
+            jboard["bluelock"] = self.blueplayer.lock.name
+        
         self.redplayer.ws.send(json.dumps(jboard))
         self.blueplayer.ws.send(json.dumps(jboard))
-
-
-
 
 
     def display(self, whoseturn):
@@ -290,12 +292,7 @@ class Board():
                 bluelist.append(name)
        
 
-        jmessage(player.ws, "\n\n\nTotal Red stones: " + str(self.redplayer.totalstones))
-        jmessage(player.opp.ws, "\n\n\nTotal Red stones: " + str(self.redplayer.totalstones))
-        jmessage(player.ws, "\n\n\nTotal Blue stones: " + str(self.blueplayer.totalstones))
-        jmessage(player.opp.ws, "\n\n\nTotal Blue stones: " + str(self.blueplayer.totalstones))
-
-
+        
         redtotal = len(redlist)
         bluetotal = len(bluelist) + 1
         if whoseturn == 'red':
@@ -321,11 +318,7 @@ class Board():
                 jmessage(player.opp.ws, "Blue is winning by " +
                                    str(bluetotal + 1 - redtotal))
 
-        jmessage(player.ws, "Red Sigils: " + str(red.sigils))
-        jmessage(player.opp.ws, "Red Sigils: " + str(red.sigils))
-
-        jmessage(player.ws, "Blue Sigils: " + str(blue.sigils))
-        jmessage(player.opp.ws, "Blue Sigils: " + str(blue.sigils))
+    
         if self.countdown > 1:
             jmessage(player.ws, "{} spellcasts remaining".format(self.countdown))
             jmessage(player.opp.ws, "{} spellcasts remaining".format(self.countdown))
@@ -521,6 +514,10 @@ class Player():
         ### Gets updated by board.update()
         self.sigils = 0
 
+
+
+        ### player.lock is the spell object which is locked.
+        ### To get its name we need player.lock.name
         self.lock = None
 
         ### player.opp will be the opponent player object.
@@ -776,15 +773,21 @@ class Player():
             self.dash()
             return None
 
-        jmessage(self.ws, "Select your second stone to sacrifice. ", "node")
-        ingress = self.ws.receive()
-        sac2 = json.loads(ingress)['message']
-        if (self.board.nodes[sac2].stone != self.color) or (sac2 == sac1):
-            jmessage(self.ws, "You do not have a stone there!")
-            self.dash()
-            return None
-
         self.board.nodes[sac1].stone = None
+        self.board.update()
+
+        
+        while True:
+            jmessage(self.ws, "Select your second stone to sacrifice. ", "node")
+            ingress = self.ws.receive()
+            sac2 = json.loads(ingress)['message']
+            if (self.board.nodes[sac2].stone != self.color):
+                jmessage(self.ws, "You do not have a stone there!")
+                continue
+            else:
+                break
+
+        
         self.board.nodes[sac2].stone = None
         self.board.update()
         self.move()
