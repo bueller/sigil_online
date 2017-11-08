@@ -205,6 +205,21 @@
 
   }
 
+  #resetbutton{
+    visibility: hidden;
+    position: relative;
+    top: 90px;
+    font-family: Papyrus;
+    text-align: center;
+    font-size: 25px;
+    border-radius: 9px;
+    border: 2px solid black;
+    background-color: LimeGreen;
+    padding: 20px 28px;
+
+
+  }
+
 
 
   #fullBoard {

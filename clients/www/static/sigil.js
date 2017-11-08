@@ -53,6 +53,8 @@ function main() {
   document.getElementById("passbutton").addEventListener(
     'click', function() {passClick(this);}, false);
 
+  document.addEventListener("keydown", keyDownFunction, false);
+
 
   lockdict = {
     "Flourish1red": "redlock_a_big_solo",
@@ -79,6 +81,26 @@ function main() {
 
 }
 
+function keyDownFunction(e) {
+  var keyCode = e.keyCode;
+  if (keyCode == 32) {
+    e.preventDefault();
+    if (document.getElementById("passbutton").style.visibility == "visible") {
+      document.getElementById("passbutton").click();
+    };
+  } else if (keyCode == 68) {
+    if (document.getElementById("dashbutton").style.visibility == "visible") {
+      document.getElementById("dashbutton").click();
+    };
+  } else if (keyCode == 82) {
+    if (document.getElementById("resetbutton").style.visibility == "visible") {
+      document.getElementById("resetbutton").click();
+
+    };
+  };
+}
+
+
 
 function dashClick(button) {
   if ((awaiting == 'action') && actionlist.includes("dash")) {
@@ -95,6 +117,7 @@ function passClick(button) {
     events.send(JSON.stringify(payload));
     document.getElementById("dashbutton").style.visibility = "hidden";
     document.getElementById("passbutton").style.visibility = "hidden";
+    document.getElementById("resetbutton").style.visibility = "hidden";
 
   };
 }
@@ -166,6 +189,13 @@ function incomingEvent(event) {
         document.getElementById(payload[nodename] + nodename).style.opacity = .5;
       };
     };
+  } else if (payload.type == "firstturnpass") {
+    awaiting = 'action';
+    actionlist = [ "pass" ];
+    document.getElementById("passbutton").style.visibility = "visible";
+    document.getElementById("resetbutton").style.visibility = "visible";
+
+
   };
 
 
@@ -174,6 +204,7 @@ function incomingEvent(event) {
   };
   if (payload.actionlist) {
     actionlist = payload.actionlist;
+    document.getElementById("resetbutton").style.visibility = "visible";
 
 
     if (actionlist.includes('dash')) {

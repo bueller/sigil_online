@@ -673,6 +673,17 @@ class Player():
             node.stone = self.color
             self.board.update()
 
+            egress = {"type": "firstturnpass",}
+            self.ws.send(json.dumps(egress))
+
+            while True:
+                ingress = self.ws.receive()
+                action = json.loads(ingress)['message']
+                if action == "pass":
+                    break
+
+
+
     def move(self, preloaded = False):
         ### If the user clicked on a node while they had 'move' action available,
         ### we call this move function with preloaded == the node they clicked.
