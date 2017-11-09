@@ -11,6 +11,54 @@
     visibility: hidden;
   }
 
+
+
+  #scorekeeper {
+  width: 30px;
+  height: 30px;
+  transition-duration: 1s;
+  transition-property: left, top;
+  }
+
+ 
+  .scoreb1 {
+  position: absolute;
+  top: 493px;
+  left: 430px;
+  }
+
+  .scoreb2 {
+  position: absolute;
+  top: 538px;
+  left: 458px;
+  }
+
+  .scoreb3 {
+  position: absolute;
+  top: 482px;
+  left: 488px;
+  }
+
+  .scorer1 {
+  position: absolute;
+  top: 423px;
+  left: 430px; 
+  }
+
+  .scorer2 {
+  position: absolute;
+  top: 379px;
+  left: 460px;
+  }
+
+  .scorer3 {
+  position: absolute;
+  top: 437px;
+  left: 488px;
+  }
+
+
+
   .redlock{
     opacity: 0;
   width:45px;

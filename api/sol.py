@@ -1,6 +1,8 @@
 ### Sigil Online
 
 
+
+
 import json
 
 import gevent
@@ -15,9 +17,7 @@ import sol_spells
 # and making blue win in this case (after giving red fair warning).
 # But I'll save that for another time.
 
-### FEATURES TO IMPLEMENT:
 
-### 'reset' command that you can input into any prompt
 
 
 class Node():
@@ -90,6 +90,9 @@ class Spell():
                 jmessage(player.ws, "Select a stone to keep: ", "node")
 
                 ingress = player.ws.receive()
+                if json.loads(ingress)['message'] == 'reset':
+                    raise resetException()
+
                 keep = json.loads(ingress)['message']
                 
                 if self.board.nodes[keep] not in self.position:
@@ -104,6 +107,9 @@ class Spell():
         self.board.update()
 
         self.resolve(player)
+
+        ### Update the score on board
+        self.board.update(True)
 
         if not self.ischarm:
             player.lock = self
@@ -209,9 +215,58 @@ class Board():
         ### and if so, end the game appropriately.
         self.countdown = 7
 
-    def update(self):
 
-        ### Updates the visual board display.
+
+        ### A dictionary of all the relevant facts about the board state.
+        ### We take a snapshot using board.take_snapshot() , and then
+        ### if the user throws a 'reset' exception, the board returns to
+        ### whatever state is saved in board.snapshot .
+        self.snapshot = None
+
+        ### A string that tells which player is winning and by how much.
+        self.score = 'b1'
+
+
+    def take_snapshot(self):
+
+        ### ADD ALL BOARD ATTRIBUTES TO THE SNAPSHOT
+
+        ### Sets board.snapshot to be a dictionary 
+        ### which describes the current boardstate
+
+        snapshot = {}
+        snapshot["turncounter"] = turncounter
+        snapshot["gameover"] = gameover
+        snapshot["winner"] = winner
+        snapshot["score"] = self.score
+        snapshot["currentplayerhasmoved"] = currentplayerhasmoved
+        for nodename in self.nodes:
+            snapshot[nodename] = self.nodes[nodename].stone
+        if self.redplayer.lock:
+            snapshot["redlock"] = self.redplayer.lock.name
+        else:
+            snapshot["redlock"] = None
+        
+        if self.blueplayer.lock:
+            snapshot["bluelock"] = self.blueplayer.lock.name
+        else:
+            snapshot["bluelock"] = None
+
+        snapshot["countdown"] = self.countdown
+
+        self.snapshot = snapshot
+
+
+
+    def update(self, update_score = False):
+
+        ### Updates the visual board display: which stones are where,
+        ### and also which spells are locked.
+
+        ### MAKE IT SEND INFO ON THE COUNTDOWN, TOO !!!
+        ### MAKE IT SEND INFO ON THE COUNTDOWN, TOO !!!
+        ### MAKE IT SEND INFO ON THE COUNTDOWN, TOO !!!
+
         ### Updates the status of all the spells.
         ### These statuses will be stored
         ### in the 'charged_spells' attributes of players.
@@ -230,6 +285,42 @@ class Board():
                 bluetotalstones += 1
         self.redplayer.totalstones = redtotalstones
         self.blueplayer.totalstones = bluetotalstones
+
+        redscore = redtotalstones
+        bluescore = bluetotalstones + 1
+
+
+        if update_score:
+            ### score should be a string like 'r1', 'b2' , etc.
+            if whoseturn == 'red':
+                if currentplayerhasmoved:
+                    nextmove = 'blue'
+                else:
+                    nextmove = 'red'
+
+            elif whoseturn == 'blue':
+                if currentplayerhasmoved:
+                    nextmove = 'red'
+                else:
+                    nextmove = 'blue'
+
+            if nextmove == 'red':
+                if redscore >= bluescore:
+                    scorenum = min(3, (redscore +1) - bluescore)
+                    score = 'r' + str(scorenum)
+                else:
+                    scorenum = min(3, bluescore - redscore)
+                    score = 'b' + str(scorenum)
+
+            elif nextmove == 'blue':
+                if bluescore >= redscore:
+                    scorenum = min(3, (bluescore + 1) - redscore)
+                    score = 'b' + str(scorenum)
+                else:
+                    scorenum = min(3, redscore - bluescore)
+                    score = 'r' + str(scorenum)
+
+            self.score = score
 
 
         redcharged = []
@@ -269,6 +360,9 @@ class Board():
             jboard["redlock"] = self.redplayer.lock.name
         if self.blueplayer.lock:
             jboard["bluelock"] = self.blueplayer.lock.name
+
+        if update_score:
+            jboard["score"] = self.score
         
         self.redplayer.ws.send(json.dumps(jboard))
         self.blueplayer.ws.send(json.dumps(jboard))
@@ -528,8 +622,8 @@ class Player():
         self.ws = None
 
     def taketurn(self, canmove=True, candash=True, cancharm=True, canspell=True):
-
-        self.board.update()
+        global currentplayerhasmoved
+        self.board.update(True)
 
         actions = []
         charmlist = []
@@ -563,6 +657,8 @@ class Player():
 
 
         ingress = self.ws.receive()
+        if json.loads(ingress)['message'] == 'reset':
+                    raise resetException()
         action = json.loads(ingress)['message']
 
 
@@ -582,11 +678,13 @@ class Player():
 
         elif action in shortcuts:
             self.move(action)
+            currentplayerhasmoved = True
             self.taketurn(False, candash, cancharm, canspell)
             return None
 
         elif action == 'move':
             self.move()
+            currentplayerhasmoved = True
             self.taketurn(False, candash, cancharm, canspell)
             return None
 
@@ -659,6 +757,8 @@ class Player():
         jmessage(self.ws, "Where would you like to place your first stone? ", "node")
 
         ingress = self.ws.receive()
+        if json.loads(ingress)['message'] == 'reset':
+                    raise resetException()
         nodename = json.loads(ingress)['message']
 
 
@@ -678,6 +778,8 @@ class Player():
 
             while True:
                 ingress = self.ws.receive()
+                if json.loads(ingress)['message'] == 'reset':
+                    raise resetException()
                 action = json.loads(ingress)['message']
                 if action == "pass":
                     break
@@ -690,6 +792,8 @@ class Player():
         if not preloaded:
             jmessage(self.ws, "Where would you like to move? ", "node")
             ingress = self.ws.receive()
+            if json.loads(ingress)['message'] == 'reset':
+                    raise resetException()
             nodename = json.loads(ingress)['message']
         else:
             nodename = preloaded
@@ -720,6 +824,8 @@ class Player():
     def softmove(self):
         jmessage(self.ws, "Where would you like to soft move? ", "node")
         ingress = self.ws.receive()
+        if json.loads(ingress)['message'] == 'reset':
+                    raise resetException()
         nodename = json.loads(ingress)['message']
         node = self.board.nodes[nodename]
         adjacent = False
@@ -749,6 +855,8 @@ class Player():
     def hardmove(self):
         jmessage(self.ws, "Where would you like to hard move? ", "node")
         ingress = self.ws.receive()
+        if json.loads(ingress)['message'] == 'reset':
+                    raise resetException()
         nodename = json.loads(ingress)['message']
         node = self.board.nodes[nodename]
         adjacent = False
@@ -778,6 +886,8 @@ class Player():
         jmessage(self.ws, "Select your first stone to sacrifice. ", "node")
         
         ingress = self.ws.receive()
+        if json.loads(ingress)['message'] == 'reset':
+                    raise resetException()
         sac1 = json.loads(ingress)['message']
         if self.board.nodes[sac1].stone != self.color:
             jmessage(self.ws, "You do not have a stone there!")
@@ -791,6 +901,8 @@ class Player():
         while True:
             jmessage(self.ws, "Select your second stone to sacrifice. ", "node")
             ingress = self.ws.receive()
+            if json.loads(ingress)['message'] == 'reset':
+                    raise resetException()
             sac2 = json.loads(ingress)['message']
             if (self.board.nodes[sac2].stone != self.color):
                 jmessage(self.ws, "You do not have a stone there!")
@@ -802,6 +914,9 @@ class Player():
         self.board.nodes[sac2].stone = None
         self.board.update()
         self.move()
+
+        ### Update the new score
+        self.board.update(True)
 
     def pushenemy(self, node):
         node.stone = self.color
@@ -815,7 +930,7 @@ class Player():
         while pushingoptions == []:
             if pushingqueue == []:
                 jmessage(self.ws, "Enemy stone crushed!")
-                self.board.update()
+                self.board.update(True)
                 return None
             nextpair = pushingqueue.pop(0)
             nextnode, distance = nextpair
@@ -852,6 +967,8 @@ class Player():
 
             jmessage(self.ws, "Where would you like to push the enemy stone? ", "node")
             ingress = self.ws.receive()
+            if json.loads(ingress)['message'] == 'reset':
+                    raise resetException()
             push = json.loads(ingress)['message']
             if push not in pushingoptionnames:
                 jmessage(self.ws, "Invalid option!")
@@ -871,11 +988,15 @@ class Player():
 
 
 
-def jmessage(player, message, awaiting= None):
-    ### The 'player' parameter here is not a player object,
+def jmessage(playerwebsocket, message, awaiting= None):
+    ### The 'playerwebsocket' parameter here is not a player object,
     ### but rather player.ws
     egress =  {"type": "message", "message": message, "awaiting": awaiting, }
-    player.send(json.dumps(egress))
+    playerwebsocket.send(json.dumps(egress))
+
+
+class resetException(Exception):
+    pass
 
 board = Board()
 red = Player(board, 'red')
@@ -885,6 +1006,8 @@ red.opp = blue
 blue.opp = red
 
 turncounter = 3
+whoseturn = None
+currentplayerhasmoved = False
 gameover = False
 winner = None
 
@@ -901,6 +1024,8 @@ chats = []
 def playgame(ws):
     global totalplayers
     global turncounter
+    global whoseturn
+    global currentplayerhasmoved
     global gameover
     global winner
     totalplayers += 1
@@ -918,13 +1043,21 @@ def playgame(ws):
         jmessage(blue.ws,"Ready to play!")
 
         jmessage(red.ws,"\nRed Turn 1")
+        whoseturn = 'red'
         red.firstmove()
 
         jmessage(blue.ws,"\nBlue Turn 1")
+        whoseturn = 'blue'
         blue.firstmove()
 
         while True:
+            ### First take a snapshot of the board,
+            ### which we will revert to in case of a reset exception.
+            
+            board.take_snapshot()
+
             turncounter += 1
+            currentplayerhasmoved = False
 
             if turncounter % 2 == 0:
                 activeplayer = red
@@ -933,23 +1066,64 @@ def playgame(ws):
                 activeplayer = blue
                 whoseturn = 'blue'
 
-            board.display(whoseturn)
-            activeplayer.bot_triggers(whoseturn)
-            if gameover:
-                board.end_game(winner)
-                break
+            
+            try:
+                board.display(whoseturn)
 
-            if whoseturn == 'red':
-                jmessage(red.ws,"\nRed Turn " + str(turncounter // 2))
-                red.taketurn()
-            else:
-                jmessage(blue.ws,"\nBlue Turn " + str(turncounter // 2))
-                blue.taketurn()
+                activeplayer.bot_triggers(whoseturn)
+                if gameover:
+                    board.end_game(winner)
+                    break
 
-            activeplayer.eot_triggers(whoseturn)
-            if gameover:
-                board.end_game(winner)
-                break
+                if whoseturn == 'red':
+                    jmessage(red.ws,"\nRed Turn " + str(turncounter // 2))
+                    red.taketurn()
+                else:
+                    jmessage(blue.ws,"\nBlue Turn " + str(turncounter // 2))
+                    blue.taketurn()
+
+                activeplayer.eot_triggers(whoseturn)
+                if gameover:
+                    board.end_game(winner)
+                    break
+
+            except resetException:
+                ### Reset all attributes of the game & board
+                ### to the way they were in board.snapshot , 
+                ### then we restart the turn loop.
+                jmessage(red.ws, "Resetting Turn")
+                jmessage(blue.ws, "Resetting Turn")
+
+                snapshot = board.snapshot
+
+                turncounter = snapshot["turncounter"]
+                currentplayerhasmoved = snapshot["currentplayerhasmoved"]
+                gameover = snapshot["gameover"]
+                winner = snapshot["winner"]
+                board.score = snapshot["score"]
+
+
+
+                for nodename in board.nodes:
+                    board.nodes[nodename].stone = snapshot[nodename]
+                if snapshot["redlock"]:
+                    red.lock = board.spelldict[snapshot["redlock"]]
+                else:
+                    red.lock = None
+                
+                if snapshot["bluelock"]:
+                    blue.lock = board.spelldict[snapshot["bluelock"]]
+                else:
+                    blue.lock = None
+
+                board.countdown = snapshot["countdown"]
+
+                board.update(True)
+
+                jmessage(red.ws, "Done Resetting")
+                jmessage(blue.ws, "Done Resetting")
+                continue
+
 
 
 @sockets.route('/api/chat')

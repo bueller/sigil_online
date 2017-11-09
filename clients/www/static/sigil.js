@@ -53,6 +53,9 @@ function main() {
   document.getElementById("passbutton").addEventListener(
     'click', function() {passClick(this);}, false);
 
+  document.getElementById("resetbutton").addEventListener(
+    'click', function() {resetClick(this);}, false);
+
   document.addEventListener("keydown", keyDownFunction, false);
 
 
@@ -120,6 +123,14 @@ function passClick(button) {
     document.getElementById("resetbutton").style.visibility = "hidden";
 
   };
+}
+
+
+function resetClick(button) {
+  awaiting = null;
+  actionlist = null;
+  var payload = {'message': 'reset'};
+  events.send(JSON.stringify(payload));
 }
 
 
@@ -224,8 +235,6 @@ function incomingEvent(event) {
 
 
 function updateBoard(boardstate) {
-
-  console.log("Board Update");
   
   for (var name of allnodenames) {
     if (boardstate[name] == "red") {
@@ -261,6 +270,12 @@ function updateBoard(boardstate) {
         document.getElementById(lockdict[bluelockedspellname + "blue"]).style.opacity = 1;
       };
     };
+
+    var score = boardstate["score"];
+    if (score) {
+      document.getElementById("scorekeeper").className = "score" + score;
+    };
+
   }
 
 
