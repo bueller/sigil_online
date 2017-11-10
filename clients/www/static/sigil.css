@@ -12,7 +12,6 @@
   }
 
 
-
   #scorekeeper {
   width: 30px;
   height: 30px;
@@ -210,6 +209,15 @@
   height:20%;
   border: none;
   overflow: scroll;
+  }
+
+  #countdown {
+  font-family: Papyrus;
+  width:20%;
+  height: 10%;
+  border: none;
+  font-size: 18px;
+    
   }
 
   .redstone{

@@ -12,6 +12,7 @@ function main() {
   events = new WebSocket("ws://" + location.host + "/api/game");
   events.onmessage = incomingEvent;
 
+
   chat = new WebSocket("ws://" + location.host + "/api/chat");
   chat.onmessage = chatEvent;
 
@@ -82,6 +83,13 @@ function main() {
     "Grow3blue2": "bluelock_c_med_duo",
   };
 
+  setInterval(ping, 3000);
+
+}
+
+function ping() {
+  var payload = {"message": "ping"};
+  events.send(JSON.stringify(payload));
 }
 
 function keyDownFunction(e) {
@@ -187,7 +195,10 @@ function nodeClick(node) {
 function incomingEvent(event) {
   var payload = JSON.parse(event.data);
   var box = document.getElementById('actionBox');
-  if (payload.type == "message") {
+
+  if (payload.type == "pong") {;}
+  
+  else if (payload.type == "message") {
     box.innerHTML += "<br/>" + payload.message;
 
     box.scrollTop = box.scrollHeight;
@@ -207,6 +218,22 @@ function incomingEvent(event) {
     document.getElementById("resetbutton").style.visibility = "visible";
 
 
+
+  } else if (payload.type == "chooserefills") {
+
+    for (nodename of allnodenames) {
+      if (payload[nodename]) {
+        document.getElementById(payload.playercolor + nodename).style.opacity = .5;
+      };
+    };
+
+  } else if (payload.type == "donerefilling") {
+    for (nodename of allnodenames) {
+      if (document.getElementById(payload.playercolor + nodename).style.opacity == .5) {
+        document.getElementById(payload.playercolor + nodename).style.opacity = 0;
+
+      };
+    };
   };
 
 
@@ -275,6 +302,9 @@ function updateBoard(boardstate) {
     if (score) {
       document.getElementById("scorekeeper").className = "score" + score;
     };
+
+    var countdown = boardstate["countdown"];
+    document.getElementById("countdown").innerHTML = countdown;
 
   }
 

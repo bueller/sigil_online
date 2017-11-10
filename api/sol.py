@@ -89,7 +89,23 @@ class Spell():
             while refills > 0:
                 jmessage(player.ws, "Select a stone to keep: ", "node")
 
-                ingress = player.ws.receive()
+                egress = { "type": "chooserefills", "playercolor": player.color }
+
+                for node in self.position:
+                    if node.stone == None:
+                        egress[node.name] = "True"
+
+                player.ws.send(json.dumps(egress))
+
+                while True:
+                    ingress = player.ws.receive()
+                    if json.loads(ingress)['message'] == 'ping':
+                        pong(player.ws)
+                        pong(player.opp.ws)
+                        continue
+                    else:
+                        break
+                
                 if json.loads(ingress)['message'] == 'reset':
                     raise resetException()
 
@@ -104,8 +120,12 @@ class Spell():
                 else:
                     refills -= 1
                     self.board.nodes[keep].stone = player.color
-        self.board.update()
+                    self.board.update()
 
+            egress = { "type": "donerefilling" , "playercolor": player.color}
+            player.ws.send(json.dumps(egress))
+            
+        self.board.update()
         self.resolve(player)
 
         ### Update the score on board
@@ -361,6 +381,17 @@ class Board():
         if self.blueplayer.lock:
             jboard["bluelock"] = self.blueplayer.lock.name
 
+
+        if self.countdown > 1:
+            countdownstring = "{} Spellcasts Remaining".format(self.countdown)
+        elif self.countdown == 1:
+            countdownstring = "1 Spellcast Remaining"
+        elif self.countdown == 0:
+            countdownstring = "Zero Spellcasts Remaining"
+
+
+        jboard["countdown"] = countdownstring
+
         if update_score:
             jboard["score"] = self.score
         
@@ -412,13 +443,6 @@ class Board():
                 jmessage(player.opp.ws, "Blue is winning by " +
                                    str(bluetotal + 1 - redtotal))
 
-    
-        if self.countdown > 1:
-            jmessage(player.ws, "{} spellcasts remaining".format(self.countdown))
-            jmessage(player.opp.ws, "{} spellcasts remaining".format(self.countdown))
-        elif self.countdown == 1:
-            jmessage(player.ws, "1 spellcast remaining")
-            jmessage(player.opp.ws, "1 spellcast remaining")
 
     def end_game(self, winner):
         ### Right now this doesn't DO anything special,
@@ -656,7 +680,16 @@ class Player():
         self.ws.send(json.dumps(egress))
 
 
-        ingress = self.ws.receive()
+        while True:
+            ingress = self.ws.receive()
+            if json.loads(ingress)['message'] == 'ping':
+                pong(self.ws)
+                pong(self.opp.ws)
+                continue
+            else:
+                break
+
+
         if json.loads(ingress)['message'] == 'reset':
                     raise resetException()
         action = json.loads(ingress)['message']
@@ -756,7 +789,16 @@ class Player():
     def firstmove(self):
         jmessage(self.ws, "Where would you like to place your first stone? ", "node")
 
-        ingress = self.ws.receive()
+        while True:
+            ingress = self.ws.receive()
+            if json.loads(ingress)['message'] == 'ping':
+                pong(self.ws)
+                pong(self.opp.ws)
+                continue
+            else:
+                break
+
+
         if json.loads(ingress)['message'] == 'reset':
                     raise resetException()
         nodename = json.loads(ingress)['message']
@@ -777,7 +819,16 @@ class Player():
             self.ws.send(json.dumps(egress))
 
             while True:
-                ingress = self.ws.receive()
+                while True:
+                    ingress = self.ws.receive()
+                    if json.loads(ingress)['message'] == 'ping':
+                        pong(self.ws)
+                        pong(self.opp.ws)
+                        continue
+                    else:
+                        break
+
+
                 if json.loads(ingress)['message'] == 'reset':
                     raise resetException()
                 action = json.loads(ingress)['message']
@@ -791,7 +842,16 @@ class Player():
         ### we call this move function with preloaded == the node they clicked.
         if not preloaded:
             jmessage(self.ws, "Where would you like to move? ", "node")
-            ingress = self.ws.receive()
+
+            while True:
+                ingress = self.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(self.ws)
+                    pong(self.opp.ws)
+                    continue
+                else:
+                    break
+
             if json.loads(ingress)['message'] == 'reset':
                     raise resetException()
             nodename = json.loads(ingress)['message']
@@ -823,7 +883,17 @@ class Player():
 
     def softmove(self):
         jmessage(self.ws, "Where would you like to soft move? ", "node")
-        ingress = self.ws.receive()
+        
+        while True:
+            ingress = self.ws.receive()
+            if json.loads(ingress)['message'] == 'ping':
+                pong(self.ws)
+                pong(self.opp.ws)
+                continue
+            else:
+                break
+
+
         if json.loads(ingress)['message'] == 'reset':
                     raise resetException()
         nodename = json.loads(ingress)['message']
@@ -854,7 +924,16 @@ class Player():
 
     def hardmove(self):
         jmessage(self.ws, "Where would you like to hard move? ", "node")
-        ingress = self.ws.receive()
+
+        while True:
+            ingress = self.ws.receive()
+            if json.loads(ingress)['message'] == 'ping':
+                pong(self.ws)
+                pong(self.opp.ws)
+                continue
+            else:
+                break
+
         if json.loads(ingress)['message'] == 'reset':
                     raise resetException()
         nodename = json.loads(ingress)['message']
@@ -885,7 +964,16 @@ class Player():
     def dash(self):
         jmessage(self.ws, "Select your first stone to sacrifice. ", "node")
         
-        ingress = self.ws.receive()
+        while True:
+            ingress = self.ws.receive()
+            if json.loads(ingress)['message'] == 'ping':
+                pong(self.ws)
+                pong(self.opp.ws)
+                continue
+            else:
+                break
+
+
         if json.loads(ingress)['message'] == 'reset':
                     raise resetException()
         sac1 = json.loads(ingress)['message']
@@ -900,7 +988,19 @@ class Player():
         
         while True:
             jmessage(self.ws, "Select your second stone to sacrifice. ", "node")
-            ingress = self.ws.receive()
+            
+
+            while True:
+                ingress = self.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(self.ws)
+                    pong(self.opp.ws)
+                    continue
+                else:
+                    break
+
+
+
             if json.loads(ingress)['message'] == 'reset':
                     raise resetException()
             sac2 = json.loads(ingress)['message']
@@ -966,7 +1066,19 @@ class Player():
             self.ws.send(json.dumps(egress))
 
             jmessage(self.ws, "Where would you like to push the enemy stone? ", "node")
-            ingress = self.ws.receive()
+            
+
+            while True:
+                ingress = self.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(self.ws)
+                    pong(self.opp.ws)
+                    continue
+                else:
+                    break
+
+
+
             if json.loads(ingress)['message'] == 'reset':
                     raise resetException()
             push = json.loads(ingress)['message']
@@ -986,6 +1098,10 @@ class Player():
 ### in two layers, using the board.addplayers method
 
 
+
+def pong(playerwebsocket):
+    egress =  {"type": "pong"}
+    playerwebsocket.send(json.dumps(egress))
 
 
 def jmessage(playerwebsocket, message, awaiting= None):
@@ -1120,10 +1236,7 @@ def playgame(ws):
 
                 board.update(True)
 
-                jmessage(red.ws, "Done Resetting")
-                jmessage(blue.ws, "Done Resetting")
                 continue
-
 
 
 @sockets.route('/api/chat')
