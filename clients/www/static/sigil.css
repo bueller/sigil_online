@@ -1,11 +1,670 @@
-/*
-  #chatBox {
-  width:20%;
-  height:20%;
-  border: 1px solid black;
+
+
+  .redlocka1start {
+  transform: rotate(59deg);
+  transition-property: transform;
+  transition-duration: 2s;
   }
 
-*/
+  .redlocka1end {
+  transform: rotate(329deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlocka2start {
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlocka2end {
+  transform: rotate(270deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+.redlockb1start {
+  transform: rotate(37deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockb1end {
+  transform: rotate(307deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockb2start {
+  transform: rotate(60deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockb2end {
+  transform: rotate(330deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockc1start {
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockc1end {
+  transform: rotate(270deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockc2start {
+  transform: rotate(30deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockc2end {
+  transform: rotate(300deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+
+  .redlocka1altstart {
+  transform: rotate(40deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlocka1altend {
+  transform: rotate(310deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlocka2altstart {
+  transform: rotate(65deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlocka2altend {
+  transform: rotate(335deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+.redlockb1altstart {
+  transform: rotate(6deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockb1altend {
+  transform: rotate(276deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockb2altstart {
+  transform: rotate(30deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockb2altend {
+  transform: rotate(300deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockc1altstart {
+  transform: rotate(65deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockc1altend {
+  transform: rotate(335deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockc2altstart {
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .redlockc2altend {
+  transform: rotate(270deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+
+
+
+/* COPY-PASTE ALL THE ABOVE FOR BLUE */
+
+.bluelocka1start {
+  transform: rotate(59deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelocka1end {
+  transform: rotate(329deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelocka2start {
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelocka2end {
+  transform: rotate(270deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+.bluelockb1start {
+  transform: rotate(37deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockb1end {
+  transform: rotate(307deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockb2start {
+  transform: rotate(60deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockb2end {
+  transform: rotate(330deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockc1start {
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockc1end {
+  transform: rotate(270deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockc2start {
+  transform: rotate(30deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockc2end {
+  transform: rotate(300deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+
+  .bluelocka1altstart {
+  transform: rotate(40deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelocka1altend {
+  transform: rotate(310deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelocka2altstart {
+  transform: rotate(65deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelocka2altend {
+  transform: rotate(335deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+.bluelockb1altstart {
+  transform: rotate(6deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockb1altend {
+  transform: rotate(276deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockb2altstart {
+  transform: rotate(30deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockb2altend {
+  transform: rotate(300deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockc1altstart {
+  transform: rotate(65deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockc1altend {
+  transform: rotate(335deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockc2altstart {
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockc2altend {
+  transform: rotate(270deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+
+
+
+
+
+  .redlockcirclestart {
+  opacity: 0;
+  width: 45px;
+  height: 45px;
+  transition-property: opacity;
+  transition-duration: 2s;
+  }
+
+  .redlockcircleend {
+  opacity: 1;
+  width: 45px;
+  height: 45px;
+  transition-property: opacity;
+  transition-duration: 2s;
+  }
+
+  .redleftbarstart {
+  position: absolute;
+  left: -22px;
+  top: 19px;
+  width: 25px;
+  height: 7px;
+  opacity: 0;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+  }
+
+  .redleftbarend {
+  position: absolute;
+  left: 2px;
+  top: 19px;
+  width: 25px;
+  height: 7px;
+  opacity: 1;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+  }
+
+  .redrightbarstart {
+  position: absolute;
+  top: 19px;
+  left: 42px;
+  width: 25px;
+  height: 7px;
+  opacity: 0;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+  }
+
+.redrightbarend {
+  position: absolute;
+  top: 19px;
+  left: 18.5px;
+  width: 25px;
+  height: 7px;
+  opacity: 1;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+}
+
+.redtopbarstart {
+  position: absolute;
+  top: -22px;
+  left: 19px;
+  width: 7px;
+  height: 25px;
+  opacity: 0;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+}
+
+.redtopbarend {
+  position: absolute;
+  top: 2px;
+  left: 19px;
+  width: 7px;
+  height: 25px;
+  opacity: 1;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+}
+
+.redbottombarstart {
+  position: absolute;
+  top: 42px;
+  left: 19px;
+  width: 7px;
+  height: 25px;
+  opacity: 0;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+}
+
+.redbottombarend {
+  position: absolute;
+  top: 18px;
+  left: 19px;
+  width: 7px;
+  height: 25px;
+  opacity: 1;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+}
+
+.bluelockstart {
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockend {
+  transform: rotate(270deg);
+  transition-property: transform;
+  transition-duration: 2s;
+  }
+
+  .bluelockcirclestart {
+  opacity: 0;
+  width: 45px;
+  height: 45px;
+  transition-property: opacity;
+  transition-duration: 2s;
+  }
+
+  .bluelockcircleend {
+  opacity: 1;
+  width: 45px;
+  height: 45px;
+  transition-property: opacity;
+  transition-duration: 2s;
+  }
+
+  .blueleftbarstart {
+  position: absolute;
+  left: -22px;
+  top: 19px;
+  width: 25px;
+  height: 7px;
+  opacity: 0;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+  }
+
+  .blueleftbarend {
+  position: absolute;
+  left: 2px;
+  top: 19px;
+  width: 25px;
+  height: 7px;
+  opacity: 1;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+  }
+
+  .bluerightbarstart {
+  position: absolute;
+  top: 19px;
+  left: 42px;
+  width: 25px;
+  height: 7px;
+  opacity: 0;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+  }
+
+.bluerightbarend {
+  position: absolute;
+  top: 19px;
+  left: 18.5px;
+  width: 25px;
+  height: 7px;
+  opacity: 1;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+}
+
+.bluetopbarstart {
+  position: absolute;
+  top: -22px;
+  left: 19px;
+  width: 7px;
+  height: 25px;
+  opacity: 0;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+}
+
+.bluetopbarend {
+  position: absolute;
+  top: 2px;
+  left: 19px;
+  width: 7px;
+  height: 25px;
+  opacity: 1;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+}
+
+.bluebottombarstart {
+  position: absolute;
+  top: 42px;
+  left: 19px;
+  width: 7px;
+  height: 25px;
+  opacity: 0;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+}
+
+.bluebottombarend {
+  position: absolute;
+  top: 18px;
+  left: 19px;
+  width: 7px;
+  height: 25px;
+  opacity: 1;
+  transition-property: left, top, opacity;
+  transition-duration: 2s;
+}
+
+
+  #redlocka1 {
+  position: absolute;
+  top: 666px;
+  left: 80.5px;
+  }
+
+  #redlocka2 {
+  position: absolute;
+  top: 864px;
+  left: 449.4px;
+  }
+
+#redlockb1 {
+  position: absolute;
+  top: 667px;
+  left: 823px;
+  }
+
+  #redlockb2 {
+  position: absolute;
+  top: 247px;
+  left: 810px;
+  }
+
+  #redlockc1 {
+  position: absolute;
+  top: 21.4px;
+  left: 452px;
+  }
+
+  #redlockc2 {
+  position: absolute;
+  top: 242.5px;
+  left: 96.5px;
+  }
+
+
+  #redlocka1alt {
+  position: absolute;
+  top: 706px;
+  left: 115px;
+  }
+
+  #redlocka2alt {
+  position: absolute;
+  top: 853px;
+  left: 502px;
+  }
+
+#redlockb1alt {
+  position: absolute;
+  top: 617px;
+  left: 842px;
+  }
+
+  #redlockb2alt {
+  position: absolute;
+  top: 205px;
+  left: 772px;
+  }
+
+  #redlockc1alt {
+  position: absolute;
+  top: 31px;
+  left: 398px;
+  }
+
+  #redlockc2alt {
+  position: absolute;
+  top: 297px;
+  left: 82px;
+  }
+
+#bluelocka1 {
+  position: absolute;
+  top: 666px;
+  left: 80.5px;
+  }
+
+  #bluelocka2 {
+  position: absolute;
+  top: 864px;
+  left: 449.4px;
+  }
+
+#bluelockb1 {
+  position: absolute;
+  top: 667px;
+  left: 823px;
+  }
+
+  #bluelockb2 {
+  position: absolute;
+  top: 247px;
+  left: 810px;
+  }
+
+  #bluelockc1 {
+  position: absolute;
+  top: 21.4px;
+  left: 452px;
+  }
+
+  #bluelockc2 {
+  position: absolute;
+  top: 242.5px;
+  left: 96.5px;
+  }
+
+
+#bluelocka1alt {
+  position: absolute;
+  top: 706px;
+  left: 115px;
+  }
+
+  #bluelocka2alt {
+  position: absolute;
+  top: 853px;
+  left: 502px;
+  }
+
+#bluelockb1alt {
+  position: absolute;
+  top: 617px;
+  left: 842px;
+  }
+
+  #bluelockb2alt {
+  position: absolute;
+  top: 205px;
+  left: 772px;
+  }
+
+  #bluelockc1alt {
+  position: absolute;
+  top: 31px;
+  left: 398px;
+  }
+
+  #bluelockc2alt {
+  position: absolute;
+  top: 297px;
+  left: 82px;
+  }
+
+
+
+
+
+
 
   #actionInput {
     visibility: hidden;
@@ -57,6 +716,7 @@
   }
 
 
+/*
 
   .redlock{
     opacity: 0;
@@ -200,7 +860,7 @@
   transform: rotate(280deg);
   }
 
-
+*/
 
 
   #actionBox {
@@ -849,3 +1509,14 @@
   top: 168px;
   left: 295px;
   }
+
+
+/*
+  #chatBox {
+  width:20%;
+  height:20%;
+  border: 1px solid black;
+  }
+*/
+
+

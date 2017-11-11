@@ -6,6 +6,7 @@ function main() {
   // and set to 'action' when the server is awaiting an action.
 
   // actionlist is the list of available actions, when awaiting == 'action'.
+
   awaiting = null
   actionlist = null
 
@@ -60,30 +61,18 @@ function main() {
   document.addEventListener("keydown", keyDownFunction, false);
 
 
+setInterval(ping, 3000);
+
+
   lockdict = {
-    "Flourish1red": "redlock_a_big_solo",
-    "Flourish2red": "redlock_b_big_solo",
-    "Flourish3red": "redlock_c_big_solo",
-    "Grow1red": "redlock_a_med_solo",
-    "Grow2red": "redlock_b_med_solo",
-    "Grow3red": "redlock_c_med_solo",
-
-    "Flourish1blue": "bluelock_a_big_solo",
-    "Flourish2blue": "bluelock_b_big_solo",
-    "Flourish3blue": "bluelock_c_big_solo",
-    "Grow1blue": "bluelock_a_med_solo",
-    "Grow2blue": "bluelock_b_med_solo",
-    "Grow3blue": "bluelock_c_med_solo",
-
-    "Flourish1blue2": "bluelock_a_big_duo",
-    "Flourish2blue2": "bluelock_b_big_duo",
-    "Flourish3blue2": "bluelock_c_big_duo",
-    "Grow1blue2": "bluelock_a_med_duo",
-    "Grow2blue2": "bluelock_b_med_duo",
-    "Grow3blue2": "bluelock_c_med_duo",
+    "Flourish1": "a1",
+    "Flourish2": "b1",
+    "Flourish3": "c1",
+    "Grow1": "a2",
+    "Grow2": "b2",
+    "Grow3": "c2",
   };
 
-  setInterval(ping, 3000);
 
 }
 
@@ -274,29 +263,61 @@ function updateBoard(boardstate) {
       document.getElementById("red" + name).style.opacity = 0;
       document.getElementById("blue" + name).style.opacity = 0;
       };
-    
- 
     };
 
 
-    for (var lock in lockdict) {
-      document.getElementById(lockdict[lock]).style.opacity = 0;
-    };
+
 
     var redlockedspellname = boardstate["redlock"];
     var bluelockedspellname = boardstate["bluelock"];
 
-    if (redlockedspellname){
-      document.getElementById(lockdict[redlockedspellname + "red"]).style.opacity = 1;
+    for (lockIdentifierChars of ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']){
+      if ((document.getElementById("redlockcircle" + lockIdentifierChars).className == "redlockcircleend") &&
+        lockdict[redlockedspellname] != lockIdentifierChars) {
+        deactivateLock(lockIdentifierChars, "red");
+      };
+
+      if ((document.getElementById("redlockcircle" + lockIdentifierChars + "alt").className == "redlockcircleend") &&
+        lockdict[redlockedspellname] != lockIdentifierChars) {
+        deactivateLock(lockIdentifierChars + "alt", "red");
+      };
+
+      if ((document.getElementById("bluelockcircle" + lockIdentifierChars).className == "bluelockcircleend") &&
+        lockdict[bluelockedspellname] != lockIdentifierChars) {
+        deactivateLock(lockIdentifierChars, "blue");
+      };
+
+      if ((document.getElementById("bluelockcircle" + lockIdentifierChars + "alt").className == "bluelockcircleend") &&
+        lockdict[bluelockedspellname] != lockIdentifierChars) {
+        deactivateLock(lockIdentifierChars + "alt", "blue");
+      };
+    };
+
+    if (redlockedspellname) {
+      if ((document.getElementById("redlockcircle" + lockdict[redlockedspellname]).className == "redlockcirclestart") &&
+        (document.getElementById("redlockcircle" + lockdict[redlockedspellname] + "alt").className == "redlockcirclestart")) {
+        if (document.getElementById("bluelockcircle" + lockdict[redlockedspellname]).className == "bluelockcirclestart"){
+          activateLock(lockdict[redlockedspellname], "red");
+        } else {activateLock(lockdict[redlockedspellname] + "alt", "red");
+        };
+
+      };
+
     };
 
     if (bluelockedspellname) {
-      if (redlockedspellname == bluelockedspellname) {
-        document.getElementById(lockdict[bluelockedspellname + "blue2"]).style.opacity = 1;
-      } else {
-        document.getElementById(lockdict[bluelockedspellname + "blue"]).style.opacity = 1;
+      if ((document.getElementById("bluelockcircle" + lockdict[bluelockedspellname]).className == "bluelockcirclestart") &&
+        (document.getElementById("bluelockcircle" + lockdict[bluelockedspellname] + "alt").className == "bluelockcirclestart")) {
+        if (document.getElementById("redlockcircle" + lockdict[bluelockedspellname]).className == "redlockcirclestart"){
+          activateLock(lockdict[bluelockedspellname], "blue");
+        } else {activateLock(lockdict[bluelockedspellname] + "alt", "blue");
+        };
+
       };
+
     };
+
+
 
     var score = boardstate["score"];
     if (score) {
@@ -309,7 +330,23 @@ function updateBoard(boardstate) {
   }
 
 
+function activateLock(lockIdentifierChars, color) {
+  document.getElementById(color + "lock" + lockIdentifierChars).className = color + "lock" + lockIdentifierChars + "end";
+  document.getElementById(color + "lockcircle" + lockIdentifierChars).className = color + "lockcircleend";
+  document.getElementById(color + "leftbar" + lockIdentifierChars).className = color + "leftbarend";
+  document.getElementById(color + "rightbar" + lockIdentifierChars).className = color + "rightbarend";
+  document.getElementById(color + "topbar" + lockIdentifierChars).className = color + "topbarend";
+  document.getElementById(color + "bottombar" + lockIdentifierChars).className = color + "bottombarend";
+}
 
+function deactivateLock(lockIdentifierChars, color) {
+  document.getElementById(color + "lock" + lockIdentifierChars).className = color + "lock" + lockIdentifierChars +"start";
+  document.getElementById(color + "lockcircle" + lockIdentifierChars).className = color + "lockcirclestart";
+  document.getElementById(color + "leftbar" + lockIdentifierChars).className = color + "leftbarstart";
+  document.getElementById(color + "rightbar" + lockIdentifierChars).className = color + "rightbarstart";
+  document.getElementById(color + "topbar" + lockIdentifierChars).className = color + "topbarstart";
+  document.getElementById(color + "bottombar" + lockIdentifierChars).className = color + "bottombarstart";
+}
 
 
 function actionInputKeypress(e) {
