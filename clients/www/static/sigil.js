@@ -73,8 +73,32 @@ setInterval(ping, 3000);
     "Grow3": "c2",
   };
 
+  fadeIn();
+
 
 }
+
+
+function fadeIn() {
+  document.getElementById("board").style.opacity = 1;
+  document.getElementById("flourish3").style.opacity = 1;
+  document.getElementById("grow2").style.opacity = 1;
+  document.getElementById("sprout2").style.opacity = 1;
+  document.getElementById("flourish2").style.opacity = 1;
+  document.getElementById("grow1").style.opacity = 1;
+  document.getElementById("sprout1").style.opacity = 1;
+  document.getElementById("flourish1").style.opacity = 1;
+  document.getElementById("grow3").style.opacity = 1;
+  document.getElementById("sprout3").style.opacity = 1;
+
+  setTimeout(scorekeeperFadeIn, 5800);
+}
+
+function scorekeeperFadeIn (){
+  document.getElementById("scorekeeper").style.opacity = 1;
+}
+
+
 
 function ping() {
   var payload = {"message": "ping"};
@@ -346,6 +370,11 @@ function deactivateLock(lockIdentifierChars, color) {
   document.getElementById(color + "rightbar" + lockIdentifierChars).className = color + "rightbarstart";
   document.getElementById(color + "topbar" + lockIdentifierChars).className = color + "topbarstart";
   document.getElementById(color + "bottombar" + lockIdentifierChars).className = color + "bottombarstart";
+}
+
+function putStone(nodename, color) {
+
+  document.getElementById(color + nodename).opacity = 1;
 }
 
 
