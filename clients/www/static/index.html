@@ -537,18 +537,17 @@
 
   </div>
 
-<!--
-  <div id="chatBox">
-    <b>Chat</b>
-  </div>
-  <input type="text" id="chatInput" onkeypress="chatInputKeypress();" />
-
--->
 
   <div id="actionBox">
     <b>Welcome to Sigil Online!</b>
   </div>
   <input type="text" id="actionInput" onkeypress="actionInputKeypress();" />
+
+
+  <div>
+    <b id="whoseturndisplay"></b>
+  </div>
+
 
   <div>
     <b id="countdown"></b>
@@ -556,22 +555,37 @@
 
 
   <div>
-    <button type="button" id="dashbutton">
+    <button type="button" id="dashbutton" class="dashbutton">
       <b>Dash</b>
     </button>
   </div>
 
   <div>
-    <button type="button" id="passbutton">
+    <button type="button" id="passbutton" class="passbutton">
       <b>Pass</b>
     </button>
   </div>
 
   <div>
-    <button type="button" id="resetbutton">
+    <button type="button" id="resetbutton" class="resetbutton">
       <b>Reset</b>
     </button>
   </div>
+
+  <div>
+    <button type="button" id="startbutton" class="startbutton">
+      <b>Join Game</b>
+    </button>
+  </div>
+
+
+
+  <div id="chatBox">
+    <b>Chat</b>
+  </div>
+
+  <input type="text" id="chatInput" onkeypress="chatInputKeypress();" />
+
   
 </body>
 

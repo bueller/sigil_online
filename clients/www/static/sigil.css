@@ -494,7 +494,7 @@
 
 
 
-    #dashbutton {
+    .dashbutton {
     visibility: hidden;
     position: relative;
     top: 30px;
@@ -505,10 +505,18 @@
     border: 2px solid black;
     background-color: OrangeRed;
     padding: 20px 28px;
+    transition-property: background-color;
+    transition-duration: .5s;
 
   }
 
-  #passbutton{
+  .dashbutton:hover {
+    background-color: #ff885c;
+    transition-property: background-color;
+    transition-duration: .5s;
+  }
+
+  .passbutton{
     visibility: hidden;
     position: relative;
     top: 60px;
@@ -517,13 +525,19 @@
     font-size: 25px;
     border-radius: 9px;
     border: 2px solid black;
-    background-color: lightsteelblue;
+    background-color: LightSlateGrey;
     padding: 20px 28px;
-
-
+    transition-property: background-color;
+    transition-duration: .5s;
   }
 
-  #resetbutton{
+  .passbutton:hover {
+    background-color: LightSteelBlue;
+    transition-property: background-color;
+    transition-duration: .5s;
+  }
+
+  .resetbutton{
     visibility: hidden;
     position: relative;
     top: 90px;
@@ -534,8 +548,36 @@
     border: 2px solid black;
     background-color: LimeGreen;
     padding: 20px 28px;
+    transition-property: background-color;
+    transition-duration: .5s;
+  }
+
+  .resetbutton:hover {
+    background-color: Lime;
+    transition-property: background-color;
+    transition-duration: .5s;
+  }
 
 
+  .startbutton{
+    position: absolute;
+    top: 100px;
+    left: 450px;
+    font-family: Papyrus;
+    text-align: center;
+    font-size: 25px;
+    border-radius: 9px;
+    border: 2px solid black;
+    background-color: MediumSeaGreen;
+    padding: 20px 28px;
+    transition-property: background-color;
+    transition-duration: .5s;
+  }
+
+  .startbutton:hover {
+    background-color: SpringGreen;
+    transition-property: background-color;
+    transition-duration: .5s;
   }
 
 
@@ -564,7 +606,7 @@
   opacity: 0;
   transition-property: opacity;
   transition-duration: 2s;
-  transition-delay: 4s;
+  transition-delay: 2.5s;
   }
 
   #flourish2 {
@@ -628,7 +670,7 @@
   opacity: 0;
   transition-property: opacity;
   transition-duration: 2s;
-  transition-delay: 4.5s;
+  transition-delay: 1.5s;
   }
 
   #sprout1 {
@@ -640,7 +682,7 @@
   opacity: 0;
   transition-property: opacity;
   transition-duration: 2s;
-  transition-delay: 3.5s;
+  transition-delay: 3s;
   }
 
   #sprout2 {
@@ -666,7 +708,7 @@
   opacity: 0;
   transition-property: opacity;
   transition-duration: 2s;
-  transition-delay: 5s;
+  transition-delay: 2s;
   }
 
 
@@ -676,6 +718,15 @@
   height:20%;
   border: none;
   overflow: scroll;
+  }
+
+
+  #whoseturndisplay {
+  font-family: Papyrus;
+  width:20%;
+  height: 10%;
+  border: none;
+  font-size: 18px;
   }
 
   #countdown {
@@ -1403,12 +1454,33 @@
   }
 
 
-/*
   #chatBox {
-  width:20%;
+  font-family: Papyrus;
+  width:18%;
   height:20%;
   border: 1px solid black;
+  overflow: scroll;
+  position: absolute;
+  top: 0px;
+  left: 1030px;
   }
-*/
+
+  #chatInput {
+  font-family: Papyrus;
+  font-size: 15px;
+  border: 1px solid black;
+  width: 18%;
+  height: 4%;
+  position: absolute;
+  top: 175px;
+  left: 1030px;
+
+  }
+
+
+
+
+
+
 
 

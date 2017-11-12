@@ -7,8 +7,9 @@ function main() {
 
   // actionlist is the list of available actions, when awaiting == 'action'.
 
-  awaiting = null
-  actionlist = null
+  awaiting = null;
+  actionlist = null;
+  joinedgame = false;
 
   events = new WebSocket("ws://" + location.host + "/api/game");
   events.onmessage = incomingEvent;
@@ -58,6 +59,9 @@ function main() {
   document.getElementById("resetbutton").addEventListener(
     'click', function() {resetClick(this);}, false);
 
+  document.getElementById("startbutton").addEventListener(
+    'click', function() {startClick(this);}, false);
+
   document.addEventListener("keydown", keyDownFunction, false);
 
 
@@ -73,13 +77,13 @@ setInterval(ping, 3000);
     "Grow3": "c2",
   };
 
-  fadeIn();
-
 
 }
 
 
 function fadeIn() {
+  document.getElementById("startbutton").style.display = "none";
+
   document.getElementById("board").style.opacity = 1;
   document.getElementById("flourish3").style.opacity = 1;
   document.getElementById("grow2").style.opacity = 1;
@@ -91,7 +95,7 @@ function fadeIn() {
   document.getElementById("grow3").style.opacity = 1;
   document.getElementById("sprout3").style.opacity = 1;
 
-  setTimeout(scorekeeperFadeIn, 5800);
+  setTimeout(scorekeeperFadeIn, 3500);
 }
 
 function scorekeeperFadeIn (){
@@ -103,9 +107,11 @@ function scorekeeperFadeIn (){
 function ping() {
   var payload = {"message": "ping"};
   events.send(JSON.stringify(payload));
+  chat.send(JSON.stringify(payload));
 }
 
 function keyDownFunction(e) {
+  if (e.target == document.getElementById("chatInput")) {;} else {
   var keyCode = e.keyCode;
   if (keyCode == 32) {
     e.preventDefault();
@@ -122,6 +128,7 @@ function keyDownFunction(e) {
 
     };
   };
+};
 }
 
 
@@ -154,6 +161,12 @@ function resetClick(button) {
   events.send(JSON.stringify(payload));
 }
 
+function startClick(button) {
+  joinedgame = true;
+  var payload = {'message': 'joinedgame'};
+  events.send(JSON.stringify(payload));
+  fadeIn();
+}
 
 
 
@@ -170,6 +183,7 @@ function spellClick(spell) {
 }
 
 function nodeClick(node) {
+  if (joinedgame){
   if (awaiting == 'node') {
     var payload = {'message': node.id.slice(4), };
     events.send(JSON.stringify(payload));
@@ -200,7 +214,7 @@ function nodeClick(node) {
     };
 
   };
-  
+  };
 }
 
 
@@ -216,6 +230,16 @@ function incomingEvent(event) {
 
     box.scrollTop = box.scrollHeight;
     
+  } else if (payload.type == "whoseturndisplay") {
+    var turnbox = document.getElementById("whoseturndisplay");
+    if (payload.color == "red") {
+      turnbox.style.color = "Crimson";
+    }
+    else if (payload.color == "blue") {
+      turnbox.style.color = "Blue";
+    }
+    turnbox.innerHTML = payload.message;
+
   } else if (payload.type == "boardstate") {
     updateBoard(payload);
   } else if (payload.type == "pushingoptions") {
@@ -372,10 +396,6 @@ function deactivateLock(lockIdentifierChars, color) {
   document.getElementById(color + "bottombar" + lockIdentifierChars).className = color + "bottombarstart";
 }
 
-function putStone(nodename, color) {
-
-  document.getElementById(color + nodename).opacity = 1;
-}
 
 
 function actionInputKeypress(e) {
@@ -390,7 +410,11 @@ function actionInputKeypress(e) {
 
 function chatEvent(event) {
   var payload = JSON.parse(event.data);
-  document.getElementById('chatBox').innerHTML += '<br /><b>Player ' + payload.player + '</b>: ' + payload.message;
+  var box = document.getElementById('chatBox');
+  if (payload.type == "pong") {;} else if (payload.type == "chatmessage") {
+  box.innerHTML += '<br /><b>' + payload.player + '</b> ' + payload.message;
+  box.scrollTop = box.scrollHeight;
+  };
   return false;
 }
 

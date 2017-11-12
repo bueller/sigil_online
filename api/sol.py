@@ -1131,7 +1131,9 @@ app = Flask(__name__)
 sockets = Sockets(app)
 
 totalplayers = 0
-chats = []
+redjoined = False
+bluejoined = False
+
 
 # The first player to join will be red.
 
@@ -1139,6 +1141,8 @@ chats = []
 @sockets.route('/api/game')
 def playgame(ws):
     global totalplayers
+    global redjoined
+    global bluejoined
     global turncounter
     global whoseturn
     global currentplayerhasmoved
@@ -1148,23 +1152,104 @@ def playgame(ws):
     if totalplayers == 1:
         red.ws = ws
         jmessage(red.ws, "You are RED this game.")
-        jmessage(red.ws, "Waiting for opponent to join...")
+
         while True:
-            gevent.sleep(10)
+            ingress = red.ws.receive()
+            message = json.loads(ingress)['message']
+            if message == 'ping':
+                pong(red.ws)
+                continue
+            elif message == 'joinedgame':
+                redjoined = True
+                break
+                
+        if not bluejoined:
+            jmessage(red.ws, "Waiting for opponent to join...")
+        while True:
+            pong(red.ws)
+            gevent.sleep(3)
+
 
     elif totalplayers == 2:
         blue.ws = ws
         jmessage(blue.ws,"You are BLUE this game.")
+
+        while True:
+            ingress = blue.ws.receive()
+            message = json.loads(ingress)['message']
+            if message == 'ping':
+                pong(blue.ws)
+                continue
+            elif message == 'joinedgame':
+                bluejoined = True
+                break
+        alreadymessaged = False
+        while True:
+            if redjoined:
+                break
+            else:
+                if not alreadymessaged:
+                    jmessage(blue.ws, "Waiting for opponent to join...")
+                    alreadymessaged = True
+                gevent.sleep(.1)
+
+
+
+
         jmessage(red.ws,"Ready to play!")
         jmessage(blue.ws,"Ready to play!")
 
-        jmessage(red.ws,"\nRed Turn 1")
-        whoseturn = 'red'
-        red.firstmove()
+        board.take_snapshot()
 
-        jmessage(blue.ws,"\nBlue Turn 1")
-        whoseturn = 'blue'
-        blue.firstmove()
+        egress = { "type": "whoseturndisplay", "color": 'red', 
+            "message": "Red Turn 1" }
+        red.ws.send(json.dumps(egress))
+        blue.ws.send(json.dumps(egress))
+
+        while True:
+            try:
+                jmessage(red.ws,"\nRed Turn 1")
+                whoseturn = 'red'
+                red.firstmove()
+                break
+
+            except resetException:
+                ### Reset all attributes of the game & board
+                ### to the way they were in board.snapshot , 
+                ### then we restart the turn loop.
+                jmessage(red.ws, "Resetting Turn")
+                jmessage(blue.ws, "Resetting Turn")
+
+                for nodename in board.nodes:
+                    board.nodes[nodename].stone = board.snapshot[nodename]
+
+                board.update()
+                continue
+
+        board.take_snapshot()
+
+        egress = { "type": "whoseturndisplay", "color": 'blue', 
+            "message": "Blue Turn 1" }
+        red.ws.send(json.dumps(egress))
+        blue.ws.send(json.dumps(egress))
+
+        while True:
+            try:
+                jmessage(blue.ws,"\nBlue Turn 1")
+                whoseturn = 'blue'
+                blue.firstmove()
+                break
+            except resetException:
+                jmessage(red.ws, "Resetting Turn")
+                jmessage(blue.ws, "Resetting Turn")
+
+                for nodename in board.nodes:
+                    board.nodes[nodename].stone = board.snapshot[nodename]
+
+                board.update()
+                continue
+
+
 
         while True:
             ### First take a snapshot of the board,
@@ -1185,6 +1270,14 @@ def playgame(ws):
             
             try:
                 board.display(whoseturn)
+                if whoseturn == 'red':
+                    message = "Red Turn " + str(turncounter // 2)
+                elif whoseturn == 'blue':
+                    message = "Blue Turn " + str(turncounter // 2)
+
+                egress = { "type": "whoseturndisplay", "color": whoseturn, "message": message }
+                red.ws.send(json.dumps(egress))
+                blue.ws.send(json.dumps(egress))
 
                 activeplayer.bot_triggers(whoseturn)
                 if gameover:
@@ -1239,26 +1332,51 @@ def playgame(ws):
                 continue
 
 
+
+
+totalchatters = 0
+redchatws = None
+bluechatws = None
+
 @sockets.route('/api/chat')
 def chat(ws):
-    global chats
-    index = len(chats)
-    chats.append(ws)
-    while True:
-        ingress = ws.receive()
-        try:
+
+    global totalchatters
+    global redchatws
+    global bluechatws
+    totalchatters += 1
+    if totalchatters == 1:
+        redchatws = ws
+        while True:
+            ingress = redchatws.receive()
             message = json.loads(ingress)['message']
-        except Exception as exc:
-            print("Could not get message from ingress package: {}".format(exc))
-            continue
+            if message == "ping":
+                pong(redchatws)
+                continue
+            else:
+                egress = {"type": "chatmessage", "player": "Red:", "message": message }
+                redchatws.send(json.dumps(egress))
+                if totalchatters == 2:
+                    bluechatws.send(json.dumps(egress))
 
-        egress = {
-                "player": index,
-                "message": message,
-        }
-        for chat in chats:
-            chat.send(json.dumps(egress))
+                
+            
 
+    elif totalchatters == 2:
+        bluechatws = ws
+        while True:
+            ingress = bluechatws.receive()
+            message = json.loads(ingress)['message']
+
+            if message == "ping":
+                pong(bluechatws)
+                continue
+
+            else:
+                egress = {"type": "chatmessage", "player": "Blue:", "message": message }
+                
+                redchatws.send(json.dumps(egress))
+                bluechatws.send(json.dumps(egress))
 
 
 
