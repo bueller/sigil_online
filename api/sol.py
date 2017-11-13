@@ -4,6 +4,7 @@
 
 
 import json
+import time
 
 import gevent
 from flask import Flask
@@ -1195,9 +1196,9 @@ def playgame(ws):
 
 
 
-
         jmessage(red.ws,"Ready to play!")
         jmessage(blue.ws,"Ready to play!")
+        time.sleep(3)
 
         board.take_snapshot()
 

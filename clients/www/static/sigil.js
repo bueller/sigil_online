@@ -95,6 +95,10 @@ function fadeIn() {
   document.getElementById("grow3").style.opacity = 1;
   document.getElementById("sprout3").style.opacity = 1;
 
+  document.getElementById("chatInput").style.visibility = "visible";
+  document.getElementById("chatBox").style.opacity = 1;
+  document.getElementById("chatInput").style.opacity = 1;
+
   setTimeout(scorekeeperFadeIn, 3500);
 }
 

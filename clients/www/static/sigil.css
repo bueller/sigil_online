@@ -1455,6 +1455,7 @@
 
 
   #chatBox {
+  opacity: 0;
   font-family: Papyrus;
   width:18%;
   height:20%;
@@ -1463,9 +1464,14 @@
   position: absolute;
   top: 0px;
   left: 1030px;
+  transition-property: opacity;
+  transition-duration: 2s;
+  transition-delay: 3s;
   }
 
   #chatInput {
+  visibility: hidden;
+  opacity: 0;
   font-family: Papyrus;
   font-size: 15px;
   border: 1px solid black;
@@ -1474,6 +1480,9 @@
   position: absolute;
   top: 175px;
   left: 1030px;
+  transition-property: opacity;
+  transition-duration: 2s;
+  transition-delay: 3s;
 
   }
 
