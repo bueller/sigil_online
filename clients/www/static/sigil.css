@@ -596,7 +596,7 @@
   transition-duration: 5s;
   }
 
-  #flourish1 {
+  #major1 {
   position: absolute;
   top: 529px;
   left: 115px;
@@ -609,7 +609,7 @@
   transition-delay: 2.5s;
   }
 
-  #flourish2 {
+  #major2 {
   position: absolute;
   top: 530.5px;
   left: 648px;
@@ -622,7 +622,7 @@
   transition-delay: 2.5s;
   }
 
-  #flourish3 {
+  #major3 {
   position: absolute;
   top: 71.5px;
   left: 380px;
@@ -635,7 +635,7 @@
   transition-delay: 1s;
 }
 
-  #grow1 {
+  #minor1 {
   position:absolute;
   top: 701.5px;
   left: 399.5px;
@@ -647,7 +647,7 @@
   transition-delay: 3s;
   }
 
-  #grow2 {
+  #minor2 {
   position:absolute;
   top: 245px;
   left: 665.5px;
@@ -660,7 +660,7 @@
   transition-delay: 1.5s;
   }
 
-  #grow3 {
+  #minor3 {
   position:absolute;
   top: 242px;
   left: 137px;
@@ -673,7 +673,7 @@
   transition-delay: 1.5s;
   }
 
-  #sprout1 {
+  #charm1 {
   position:absolute;
   top: 584px;
   left: 378px;
@@ -685,7 +685,7 @@
   transition-delay: 3s;
   }
 
-  #sprout2 {
+  #charm2 {
   position:absolute;
   top: 393px;
   left: 595px;
@@ -698,7 +698,7 @@
   transition-delay: 2s;
   }
 
-  #sprout3 {
+  #charm3 {
   position:absolute;
   top: 301px;
   left: 318px;

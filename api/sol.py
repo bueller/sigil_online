@@ -158,7 +158,14 @@ class Spell():
             self.charged = firststone
 
 
-############################ These should be moved to a module
+
+########################################################
+########################################################
+########################################################
+########################################################
+########################################################
+
+#####  ACTUAL SPELLS HERE
 
 
 class Sprout(Spell):
@@ -191,8 +198,38 @@ class Flourish(Spell):
         for i in range(4):
             player.softmove()
 
+class Fury(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.one_sigil_refill = 0
+        self.two_sigil_refill = 0
 
-########################### These should be moved to a module
+    def resolve(self, player):
+        for i in range(3):
+            player.hardmove()
+
+class Onslaught(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.one_sigil_refill = 0
+        self.two_sigil_refill = 2
+
+    def resolve(self, player):
+        for i in range(4):
+            player.hardmove()
+
+
+
+
+#####  ACTUAL SPELLS FINISHED
+
+########################################################
+########################################################
+########################################################
+########################################################
+########################################################
+
+
 
 
 class Board():
@@ -1031,7 +1068,7 @@ class Player():
         while pushingoptions == []:
             if pushingqueue == []:
                 jmessage(self.ws, "Enemy stone crushed!")
-                self.board.update(True)
+                self.board.update()
                 return None
             nextpair = pushingqueue.pop(0)
             nextnode, distance = nextpair
@@ -1154,6 +1191,23 @@ def playgame(ws):
         red.ws = ws
         jmessage(red.ws, "You are RED this game.")
 
+
+        ### spellsetup is a JSON dictionary with keys "major2", "charm3", etc.,
+        ### and values "Flourish2", "Sprout3", etc.
+        egress = { "type": "spellsetup" }
+
+        egress["major1"] = board.spells[0].name
+        egress["major2"] = board.spells[1].name
+        egress["major3"] = board.spells[2].name
+        egress["minor1"] = board.spells[3].name
+        egress["minor2"] = board.spells[4].name
+        egress["minor3"] = board.spells[5].name
+        egress["charm1"] = board.spells[6].name
+        egress["charm2"] = board.spells[7].name
+        egress["charm3"] = board.spells[8].name
+        
+        red.ws.send(json.dumps(egress))
+
         while True:
             ingress = red.ws.receive()
             message = json.loads(ingress)['message']
@@ -1174,6 +1228,23 @@ def playgame(ws):
     elif totalplayers == 2:
         blue.ws = ws
         jmessage(blue.ws,"You are BLUE this game.")
+
+
+        ### spellsetup is a JSON dictionary with keys "major2", "charm3", etc.,
+        ### and values "Flourish2", "Sprout3", etc.
+        egress = { "type": "spellsetup" }
+
+        egress["major1"] = board.spells[0].name
+        egress["major2"] = board.spells[1].name
+        egress["major3"] = board.spells[2].name
+        egress["minor1"] = board.spells[3].name
+        egress["minor2"] = board.spells[4].name
+        egress["minor3"] = board.spells[5].name
+        egress["charm1"] = board.spells[6].name
+        egress["charm2"] = board.spells[7].name
+        egress["charm3"] = board.spells[8].name
+        
+        blue.ws.send(json.dumps(egress))
 
         while True:
             ingress = blue.ws.receive()

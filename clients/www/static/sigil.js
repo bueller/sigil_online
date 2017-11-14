@@ -11,6 +11,37 @@ function main() {
   actionlist = null;
   joinedgame = false;
 
+
+  // SpellDict will be a dictionary with keys "major2", "charm3", etc.,
+  // and values "Flourish2", "Sprout3", etc.
+  SpellDict = null;
+
+
+  // ReverseSpellDict will be a dictionary with keys "Flourish2", "Sprout3", etc.,
+  // and values "major2", "charm3", etc.
+  ReverseSpellDict = null;
+
+
+  auxlockdict = {
+    "major1": "a1",
+    "major2": "b1",
+    "major3": "c1",
+    "minor1": "a2",
+    "minor2": "b2",
+    "minor3": "c2",
+  };
+
+  // lockdict will be a dictionary with keys "Flourish2", "Sprout3", etc.,
+  // and values "a1", "c2", etc.  It is initialized at the same time as SpellDict,
+  // once the spell setup JSON is received.
+  lockdict = {};
+
+  for (spellname in ReverseSpellDict) {
+    lockdict[spellname] = auxlockdict[ReverseSpellDict[spellname]];
+  };
+
+
+
   events = new WebSocket("ws://" + location.host + "/api/game");
   events.onmessage = incomingEvent;
 
@@ -30,23 +61,23 @@ function main() {
     allbluestones[i].addEventListener('click', function () {nodeClick(this);}, false);
   };
 
-  document.getElementById("flourish1").addEventListener(
-    'click', function() {spellClick(this);}, false);
+  document.getElementById("major1").addEventListener(
+    'click', function() {spellClick(this.id);}, false);
 
-  document.getElementById("flourish2").addEventListener(
-    'click', function() {spellClick(this);}, false);
+  document.getElementById("major2").addEventListener(
+    'click', function() {spellClick(this.id);}, false);
 
-  document.getElementById("flourish3").addEventListener(
-    'click', function() {spellClick(this);}, false);
+  document.getElementById("major3").addEventListener(
+    'click', function() {spellClick(this.id);}, false);
 
-  document.getElementById("grow1").addEventListener(
-    'click', function() {spellClick(this);}, false);
+  document.getElementById("minor1").addEventListener(
+    'click', function() {spellClick(this.id);}, false);
 
-  document.getElementById("grow2").addEventListener(
-    'click', function() {spellClick(this);}, false);
+  document.getElementById("minor2").addEventListener(
+    'click', function() {spellClick(this.id);}, false);
 
-  document.getElementById("grow3").addEventListener(
-    'click', function() {spellClick(this);}, false);
+  document.getElementById("minor3").addEventListener(
+    'click', function() {spellClick(this.id);}, false);
 
 
 
@@ -68,16 +99,34 @@ function main() {
 setInterval(ping, 3000);
 
 
-  lockdict = {
-    "Flourish1": "a1",
-    "Flourish2": "b1",
-    "Flourish3": "c1",
-    "Grow1": "a2",
-    "Grow2": "b2",
-    "Grow3": "c2",
+}
+
+
+function spellClick(spellposition) {
+  // Takes in a spell position, e.g., "major2", "minor3"
+  var spellname = SpellDict[spellposition];
+  if ((awaiting == 'action') && actionlist.includes(spellname)) {
+    var payload = {'message': spellname};
+    events.send(JSON.stringify(payload));
+    awaiting = null;
+
   };
 
+}
 
+
+function setupSpells(spellnamedict) {
+  // spellnamedict is a JSON dictionary with keys "major2", "charm3", etc.,
+  // and values "Flourish2", "Sprout3", etc.
+  document.getElementById("major1").src = "images/" + spellnamedict.major1.slice(0, -1) + ".png";
+  document.getElementById("major2").src = "images/" + spellnamedict.major2.slice(0, -1) + ".png";
+  document.getElementById("major3").src = "images/" + spellnamedict.major3.slice(0, -1) + ".png";
+  document.getElementById("minor1").src = "images/" + spellnamedict.minor1.slice(0, -1) + ".png";
+  document.getElementById("minor2").src = "images/" + spellnamedict.minor2.slice(0, -1) + ".png";
+  document.getElementById("minor3").src = "images/" + spellnamedict.minor3.slice(0, -1) + ".png";
+  document.getElementById("charm1").src = "images/" + spellnamedict.charm1.slice(0, -1) + ".png";
+  document.getElementById("charm2").src = "images/" + spellnamedict.charm2.slice(0, -1) + ".png";
+  document.getElementById("charm3").src = "images/" + spellnamedict.charm3.slice(0, -1) + ".png";
 }
 
 
@@ -85,15 +134,15 @@ function fadeIn() {
   document.getElementById("startbutton").style.display = "none";
 
   document.getElementById("board").style.opacity = 1;
-  document.getElementById("flourish3").style.opacity = 1;
-  document.getElementById("grow2").style.opacity = 1;
-  document.getElementById("sprout2").style.opacity = 1;
-  document.getElementById("flourish2").style.opacity = 1;
-  document.getElementById("grow1").style.opacity = 1;
-  document.getElementById("sprout1").style.opacity = 1;
-  document.getElementById("flourish1").style.opacity = 1;
-  document.getElementById("grow3").style.opacity = 1;
-  document.getElementById("sprout3").style.opacity = 1;
+  document.getElementById("major3").style.opacity = 1;
+  document.getElementById("minor2").style.opacity = 1;
+  document.getElementById("charm2").style.opacity = 1;
+  document.getElementById("major2").style.opacity = 1;
+  document.getElementById("minor1").style.opacity = 1;
+  document.getElementById("charm1").style.opacity = 1;
+  document.getElementById("major1").style.opacity = 1;
+  document.getElementById("minor3").style.opacity = 1;
+  document.getElementById("charm3").style.opacity = 1;
 
   document.getElementById("chatInput").style.visibility = "visible";
   document.getElementById("chatBox").style.opacity = 1;
@@ -174,17 +223,7 @@ function startClick(button) {
 
 
 
-function spellClick(spell) {
-  const capitalized = spell.id.charAt(0).toUpperCase() + spell.id.slice(1);
-  if ((awaiting == 'action') && actionlist.includes(capitalized)) {
-    var payload = {'message': capitalized};
-    events.send(JSON.stringify(payload));
-    awaiting = null;
 
-  };
-
-
-}
 
 function nodeClick(node) {
   if (joinedgame){
@@ -194,18 +233,18 @@ function nodeClick(node) {
     awaiting = null;
   } else if (awaiting == 'action') {
 
-      if (actionlist.includes('Sprout1') && node.id == 'bluea7') {
-      var payload = {'message': 'Sprout1', };
+      if (actionlist.includes(SpellDict['charm1']) && node.id == 'bluea7') {
+      var payload = {'message': SpellDict['charm1'], };
       events.send(JSON.stringify(payload));
       awaiting = null;
 
-    } else if (actionlist.includes('Sprout2') && node.id == 'blueb7') {
-      var payload = {'message': 'Sprout2', };
+    } else if (actionlist.includes(SpellDict['charm2']) && node.id == 'blueb7') {
+      var payload = {'message': SpellDict['charm2'], };
       events.send(JSON.stringify(payload));
       awaiting = null;
 
-    } else if (actionlist.includes('Sprout3') && node.id == 'bluec7') {
-      var payload = {'message': 'Sprout3', };
+    } else if (actionlist.includes(SpellDict['charm3']) && node.id == 'bluec7') {
+      var payload = {'message': SpellDict['charm3'], };
       events.send(JSON.stringify(payload));
       awaiting = null;
 
@@ -227,9 +266,30 @@ function incomingEvent(event) {
   var payload = JSON.parse(event.data);
   var box = document.getElementById('actionBox');
 
-  if (payload.type == "pong") {;}
-  
-  else if (payload.type == "message") {
+  if (payload.type == "pong") {;} else if (payload.type == "spellsetup") {
+
+    SpellDict = payload;
+    delete SpellDict['type'];
+
+    ReverseSpellDict = {};
+    for (position in SpellDict) {ReverseSpellDict[SpellDict[position]] = position;};
+
+    for (spellname in ReverseSpellDict) {
+    lockdict[spellname] = auxlockdict[ReverseSpellDict[spellname]];
+    };
+
+
+    console.log(SpellDict);
+    console.log(ReverseSpellDict);
+
+
+
+
+
+
+    setupSpells(payload);
+
+  } else if (payload.type == "message") {
     box.innerHTML += "<br/>" + payload.message;
 
     box.scrollTop = box.scrollHeight;
@@ -322,6 +382,7 @@ function updateBoard(boardstate) {
 
     var redlockedspellname = boardstate["redlock"];
     var bluelockedspellname = boardstate["bluelock"];
+    // These are the locked spell names, e.g., "Flourish2", "Grow3"
 
     for (lockIdentifierChars of ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']){
       if ((document.getElementById("redlockcircle" + lockIdentifierChars).className == "redlockcircleend") &&
