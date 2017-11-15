@@ -79,7 +79,7 @@ all_green9 = "Sprout(self, self.positions[9], 'Sprout3')"
 
 ### UNCOMMENT THE LINE BELOW TO PLAY ALL-GREEN
 
-#spell_list = [all_green1, all_green2, all_green3, all_green4, all_green5, all_green6, all_green7, all_green8, all_green9]
+spell_list = [all_green1, all_green2, all_green3, all_green4, all_green5, all_green6, all_green7, all_green8, all_green9]
 
 
 

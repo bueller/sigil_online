@@ -61,23 +61,23 @@ function main() {
     allbluestones[i].addEventListener('click', function () {nodeClick(this);}, false);
   };
 
-  document.getElementById("major1").addEventListener(
-    'click', function() {spellClick(this.id);}, false);
+  document.getElementById("majornodes1").addEventListener(
+    'click', function() {spellClick("major1");}, false);
 
-  document.getElementById("major2").addEventListener(
-    'click', function() {spellClick(this.id);}, false);
+  document.getElementById("majornodes2").addEventListener(
+    'click', function() {spellClick("major2");}, false);
 
-  document.getElementById("major3").addEventListener(
-    'click', function() {spellClick(this.id);}, false);
+  document.getElementById("majornodes3").addEventListener(
+    'click', function() {spellClick("major3");}, false);
 
-  document.getElementById("minor1").addEventListener(
-    'click', function() {spellClick(this.id);}, false);
+  document.getElementById("minornodes1").addEventListener(
+    'click', function() {spellClick("minor1");}, false);
 
-  document.getElementById("minor2").addEventListener(
-    'click', function() {spellClick(this.id);}, false);
+  document.getElementById("minornodes2").addEventListener(
+    'click', function() {spellClick("minor2");}, false);
 
-  document.getElementById("minor3").addEventListener(
-    'click', function() {spellClick(this.id);}, false);
+  document.getElementById("minornodes3").addEventListener(
+    'click', function() {spellClick("minor3");}, false);
 
 
 
@@ -104,6 +104,7 @@ setInterval(ping, 3000);
 
 function spellClick(spellposition) {
   // Takes in a spell position, e.g., "major2", "minor3"
+  console.log("Clicked!");
   var spellname = SpellDict[spellposition];
   if ((awaiting == 'action') && actionlist.includes(spellname)) {
     var payload = {'message': spellname};
@@ -111,6 +112,31 @@ function spellClick(spellposition) {
     awaiting = null;
 
   };
+
+}
+
+
+function addSpellLabels() {
+  document.getElementById("majordiv1").onmouseover = function() {document.getElementById("majortext1").style.display="inline";};
+  document.getElementById("majordiv2").onmouseover = function() {document.getElementById("majortext2").style.display="inline";};
+  document.getElementById("majordiv3").onmouseover = function() {document.getElementById("majortext3").style.display="inline";};
+  document.getElementById("minordiv1").onmouseover = function() {document.getElementById("minortext1").style.display="inline";};
+  document.getElementById("minordiv2").onmouseover = function() {document.getElementById("minortext2").style.display="inline";};
+  document.getElementById("minordiv3").onmouseover = function() {document.getElementById("minortext3").style.display="inline";};
+  document.getElementById("charmdiv1").onmouseover = function() {document.getElementById("charmtext1").style.display="inline";};
+  document.getElementById("charmdiv2").onmouseover = function() {document.getElementById("charmtext2").style.display="inline";};
+  document.getElementById("charmdiv3").onmouseover = function() {document.getElementById("charmtext3").style.display="inline";};
+
+  document.getElementById("majordiv1").onmouseout = function() {document.getElementById("majortext1").style.display="none";};
+  document.getElementById("majordiv2").onmouseout = function() {document.getElementById("majortext2").style.display="none";};
+  document.getElementById("majordiv3").onmouseout = function() {document.getElementById("majortext3").style.display="none";};
+  document.getElementById("minordiv1").onmouseout = function() {document.getElementById("minortext1").style.display="none";};
+  document.getElementById("minordiv2").onmouseout = function() {document.getElementById("minortext2").style.display="none";};
+  document.getElementById("minordiv3").onmouseout = function() {document.getElementById("minortext3").style.display="none";};
+  document.getElementById("charmdiv1").onmouseout = function() {document.getElementById("charmtext1").style.display="none";};
+  document.getElementById("charmdiv2").onmouseout = function() {document.getElementById("charmtext2").style.display="none";};
+  document.getElementById("charmdiv3").onmouseout = function() {document.getElementById("charmtext3").style.display="none";};
+
 
 }
 
@@ -144,11 +170,23 @@ function fadeIn() {
   document.getElementById("minor3").style.opacity = 1;
   document.getElementById("charm3").style.opacity = 1;
 
+  document.getElementById("majornodes1").style.opacity = .6;
+  document.getElementById("majornodes2").style.opacity = .6;
+  document.getElementById("majornodes3").style.opacity = .6;
+  document.getElementById("minornodes1").style.opacity = .6;
+  document.getElementById("minornodes2").style.opacity = .6;
+  document.getElementById("minornodes3").style.opacity = .6;
+  document.getElementById("charmnodes1").style.opacity = .6;
+  document.getElementById("charmnodes2").style.opacity = .6;
+  document.getElementById("charmnodes3").style.opacity = .6;
+
   document.getElementById("chatInput").style.visibility = "visible";
   document.getElementById("chatBox").style.opacity = 1;
   document.getElementById("chatInput").style.opacity = 1;
 
   setTimeout(scorekeeperFadeIn, 3500);
+
+  setTimeout(addSpellLabels, 3500);
 }
 
 function scorekeeperFadeIn (){
