@@ -113,7 +113,7 @@ class Spell():
                 keep = json.loads(ingress)['message']
                 
                 if self.board.nodes[keep] not in self.position:
-                    (player.ws, "That's not a node in your spell!")
+                    jmessage(player.ws, "That's not a node in your spell!")
 
                 elif self.board.nodes[keep].stone != None:
                     jmessage(player.ws, "You already kept that stone!")
@@ -173,8 +173,187 @@ class Sprout(Spell):
         super().__init__(board, position, name)
         self.ischarm = True
 
+        self.text = "<b>Sprout</b><br />Make 1 soft move."
+
+
     def resolve(self, player):
         player.softmove()
+
+
+class Stomp(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.ischarm = True
+
+        self.text = "<b>Stomp</b><br />Make 1 hard move.<br />Counts as your dash."
+
+
+    def resolve(self, player):
+        ### The behavior about "counting as your dash" is implemented
+        ### in the player.taketurn method.
+        player.hardmove()
+
+
+
+class Blink(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.ischarm = True
+
+        self.text = "<b>Blink</b><br />Put a stone into any empty node,<br />then sacrifice a stone."
+
+
+    def resolve(self, player):
+        jmessage(player.ws, "Where would you like to Blink?", "node")
+        while True:
+            while True:
+                ingress = player.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(player.ws)
+                    pong(player.opp.ws)
+                    continue
+                else:
+                    break
+                
+            if json.loads(ingress)['message'] == 'reset':
+                raise resetException()
+
+            actualmessage = json.loads(ingress)['message']
+
+            if actualmessage in board.nodes:
+                node = board.nodes[actualmessage]
+                if node.stone != None:
+                    continue
+
+                else:
+                    node.stone = player.color
+                    board.update()
+                    break
+
+            else:
+                continue
+
+        jmessage(player.ws, "Select a stone to sacrifice.", "node")
+        while True:
+            while True:
+                ingress = player.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(player.ws)
+                    pong(player.opp.ws)
+                    continue
+                else:
+                    break
+                
+            if json.loads(ingress)['message'] == 'reset':
+                raise resetException()
+
+            actualmessage = json.loads(ingress)['message']
+
+            if actualmessage in board.nodes:
+                node = board.nodes[actualmessage]
+                if node.stone != player.color:
+                    continue
+
+                else:
+                    node.stone = None
+                    break
+
+            else:
+                continue
+
+
+
+
+class Gust(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.ischarm = True
+
+        self.text = "<b>Gust</b><br />Relocate up to 2 enemy stones<br />which are touching you<br />into any empty nodes."
+
+
+    def resolve(self, player):
+
+        egress = {"type": "selecting"}
+        player.ws.send(json.dumps(egress))
+
+        gustingstonecount = 0
+
+        while True:
+            jmessage(player.ws, "Select an enemy stone to Gust, or press Done if you are done selecting.", "node")
+
+            while True:
+                ingress = player.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(player.ws)
+                    pong(player.opp.ws)
+                    continue
+                else:
+                    break
+                
+            if json.loads(ingress)['message'] == 'reset':
+                raise resetException()
+
+            actualmessage = json.loads(ingress)['message']
+
+            if actualmessage == 'doneselecting':
+                break
+
+            elif actualmessage in board.nodes:
+                node = board.nodes[actualmessage]
+                if node.stone != player.enemy:
+                    jmessage(player.ws, "Invalid selection")
+                    continue
+                adjacent = False
+                for neighbor in node.neighbors:
+                    if neighbor.stone == player.color:
+                        adjacent = True
+                if not adjacent:
+                    jmessage(player.ws, "Invalid selection")
+                    continue
+
+                node.stone = None
+                board.update()
+                gustingstonecount += 1
+                if gustingstonecount == 2:
+                    break
+            else:
+                continue
+
+        egress = {"type": "doneselecting"}
+        player.ws.send(json.dumps(egress))
+
+        while gustingstonecount > 0:
+            jmessage(player.ws, "Where would you like to Gust the enemy stone?", "node")
+
+            while True:
+                ingress = player.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(player.ws)
+                    pong(player.opp.ws)
+                    continue
+                else:
+                    break
+                
+            if json.loads(ingress)['message'] == 'reset':
+                raise resetException()
+
+            actualmessage = json.loads(ingress)['message']
+
+            if actualmessage in board.nodes:
+                node = board.nodes[actualmessage]
+                if node.stone != None:
+                    jmessage(player.ws, "Invalid selection")
+                    continue
+
+                gustingstonecount -= 1
+                node.stone = player.enemy
+                board.update()
+
+            else:
+                continue
+
+
 
 
 class Grow(Spell):
@@ -183,9 +362,38 @@ class Grow(Spell):
         self.one_sigil_refill = 0
         self.two_sigil_refill = 1
 
+        self.text = "<b>Grow</b><br /><img src='images/moonrefill.png' class='moonrefill'><br />Make 3 soft moves."
+
     def resolve(self, player):
         for i in range(3):
             player.softmove()
+
+
+class Thunder(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.one_sigil_refill = 0
+        self.two_sigil_refill = 1
+
+        self.text = "<b>Thunder</b><br /><img src='images/moonrefill.png' class='moonrefill'><br />Destroy up to 3 enemy stones<br />in any one spell."
+
+    def resolve(self, player):
+        ### IMPLEMENT THIS
+        pass
+
+class Levity(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.one_sigil_refill = 0
+        self.two_sigil_refill = 0
+
+        self.text = "<b>Levity</b><br />Static<br />You may put a stone into any empty node<br />as your standard move each turn."
+
+    def resolve(self, player):
+        ### IMPLEMENT THIS
+        pass
+
+
 
 
 class Flourish(Spell):
@@ -193,6 +401,8 @@ class Flourish(Spell):
         super().__init__(board, position, name)
         self.one_sigil_refill = 1
         self.two_sigil_refill = 1
+
+        self.text = "<b>Flourish</b><br /><img src='images/sunrefill.png' class='sunrefill'><img src='images/moonrefill.png' class='moonrefill'><br />Make 4 soft moves."
 
     def resolve(self, player):
         for i in range(4):
@@ -204,6 +414,8 @@ class Fury(Spell):
         self.one_sigil_refill = 0
         self.two_sigil_refill = 0
 
+        self.text = "<b>Fury</b><br /><br />Make 3 hard moves."
+
     def resolve(self, player):
         for i in range(3):
             player.hardmove()
@@ -214,10 +426,300 @@ class Onslaught(Spell):
         self.one_sigil_refill = 0
         self.two_sigil_refill = 2
 
+        self.text = "<b>Onslaught</b><br /><img src='images/moonrefill.png' class='moonrefill'><img src='images/moonrefill.png' class='moonrefill'><br />Make 4 hard moves."
+
     def resolve(self, player):
         for i in range(4):
             player.hardmove()
 
+
+class Fire(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.one_sigil_refill = 0
+        self.two_sigil_refill = 1
+
+        self.text = "<b>Fire</b><br /><img src='images/moonrefill.png' class='moonrefill'><br />Destroy all enemy stones<br />which are touching you."
+
+    def resolve(self, player):
+        for name in board.nodes:
+            node = board.nodes[name]
+            if node.stone == player.enemy:
+                for neighbor in node.neighbors:
+                    if neighbor.stone == player.color:
+                        node.stone = None
+
+
+class Ice(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.one_sigil_refill = 0
+        self.two_sigil_refill = 1
+
+        self.text = "<b>Ice</b><br /><img src='images/moonrefill.png' class='moonrefill'><br />Destroy up to 1 enemy stone<br />in each spell and charm."
+
+    def resolve(self, player):
+        ### WRITE ICE RESOLUTION CODE
+
+
+        egress = {"type": "selecting"}
+        player.ws.send(json.dumps(egress))
+
+        iceablespells = []
+        ### We will use the notation of board.positions to refer to spells.
+        ### That is, 1,2,3 are the majors, 4,5,6 are the minors, 7,8,9 charms.
+
+        for i in range(1,10):
+            innernodelist = board.positions[i]
+            for node in innernodelist:
+                if node.stone == player.enemy:
+                    iceablespells.append(i)
+                    break
+
+        while len(iceablespells) > 0:
+            jmessage(player.ws, "Select an enemy stone to destroy, or press Done if you are done selecting.", "node")
+
+            while True:
+                ingress = player.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(player.ws)
+                    pong(player.opp.ws)
+                    continue
+                else:
+                    break
+                
+            if json.loads(ingress)['message'] == 'reset':
+                raise resetException()
+
+            actualmessage = json.loads(ingress)['message']
+
+            if actualmessage == 'doneselecting':
+                break
+
+            elif actualmessage in board.nodes:
+                node = board.nodes[actualmessage]
+
+                if node.stone != player.enemy:
+                    jmessage(player.ws, "Invalid selection")
+                    continue
+
+                validstone = False
+
+                for spellnum in iceablespells:
+                    if node in board.positions[spellnum]:
+                        node.stone = None
+                        iceablespells.remove(spellnum)
+                        board.update()
+                        continue
+
+                jmessage(player.ws, "Invalid selection")
+                continue
+                
+            else:
+                continue
+
+        egress = {"type": "doneselecting"}
+        player.ws.send(json.dumps(egress))
+
+
+
+
+class Syzygy(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.one_sigil_refill = 1
+        self.two_sigil_refill = 1
+
+        self.text = "<b>Syzygy</b><br /><img src='images/sunrefill.png' class='sunrefill'><img src='images/moonrefill.png' class='moonrefill'><br />Fill the minor spell and charm<br />across the board from Syzygy<br />with your stones. Relocate<br />all enemy stones that were there<br />into any empty nodes."
+
+    def resolve(self, player):
+        myposition = self.name[-1:]
+        if myposition == '1':
+            oppositenodes = board.positions[5] + board.positions[8]
+        elif myposition == '2':
+            oppositenodes = board.positions[6] + board.positions[9]
+        elif myposition == '3':
+            oppositenodes = board.positions[4] + board.positions[7]
+
+        enemycount = 0
+        for node in oppositenodes:
+            if node.stone == player.enemy:
+                enemycount += 1
+        for node in oppositenodes:
+            node.stone = player.color
+            board.update()
+
+        while enemycount > 0:
+            jmessage(player.ws, "Where would you like to relocate the enemy stone?", "node")
+
+            while True:
+                ingress = player.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(player.ws)
+                    pong(player.opp.ws)
+                    continue
+                else:
+                    break
+                
+            if json.loads(ingress)['message'] == 'reset':
+                raise resetException()
+
+            actualmessage = json.loads(ingress)['message']
+
+            if actualmessage in board.nodes:
+                node = board.nodes[actualmessage]
+                if node.stone != None:
+                    jmessage(player.ws, "Invalid selection")
+                    continue
+
+                enemycount -= 1
+                node.stone = player.enemy
+                board.update()
+
+            else:
+                continue
+
+
+
+
+
+
+
+
+
+
+
+class Bewitch(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.one_sigil_refill = 1
+        self.two_sigil_refill = 1
+
+        self.text = "<b>Bewitch</b><br /><img src='images/sunrefill.png' class='sunrefill'><img src='images/moonrefill.png' class='moonrefill'><br />Choose any 2 enemy stones<br />which are touching each other.<br />Convert them to your color."
+
+    def resolve(self, player):
+
+        while True:
+            egress = {"type": "selectingNoButton"}
+            player.ws.send(json.dumps(egress))
+
+            jmessage(player.ws, "Select an enemy stone to convert.", "node")
+
+            while True:
+                ingress = player.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(player.ws)
+                    pong(player.opp.ws)
+                    continue
+                else:
+                    break
+                                
+            if json.loads(ingress)['message'] == 'reset':
+                raise resetException()
+
+            actualmessage = json.loads(ingress)['message']
+
+            if actualmessage in board.nodes:
+                node = board.nodes[actualmessage]
+
+                if node.stone != player.enemy:
+                    jmessage(player.ws, "Invalid selection")
+                    continue
+
+                validstone = False
+
+                for neighbor in node.neighbors:
+                    if neighbor.stone == player.enemy:
+                        validstone = True
+
+                if validstone:
+                    node.stone = player.color
+                    board.update()
+                    break
+
+                else:
+                    jmessage(player.ws, "Invalid selection")
+                    continue
+
+            else:
+                continue
+
+        while True:
+            jmessage(player.ws, "Select an adjacent enemy stone to convert.", "node")
+            while True:
+                ingress = player.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(player.ws)
+                    pong(player.opp.ws)
+                    continue
+                else:
+                    break
+                        
+            if json.loads(ingress)['message'] == 'reset':
+                raise resetException()
+
+            actualmessage = json.loads(ingress)['message']
+
+            if actualmessage in board.nodes:
+                node2 = board.nodes[actualmessage]
+
+                if node2.stone != player.enemy:
+                    jmessage(player.ws, "Invalid selection")
+                    continue
+
+                validstone = False
+                for neighbor in node2.neighbors:
+                    if neighbor == node:
+                        validstone = True
+
+                if not validstone:
+                    jmessage(player.ws, "Invalid selection")
+                    continue
+
+                else:
+                    node2.stone = player.color
+                    board.update()
+                    break
+
+            else:
+                continue
+
+
+
+class Nirvana(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.one_sigil_refill = 0
+        self.two_sigil_refill = 0
+
+        self.text = "<b>Nirvana</b><br />Static<br />Your dash each turn<br />only requires 1 sacrifice.<br />(You may sacrifice it from Nirvana.)"
+
+    def resolve(self, player):
+        ### IMPLEMENT THIS
+        pass
+
+
+
+
+class Inferno(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.one_sigil_refill = 0
+        self.two_sigil_refill = 0
+
+        self.text = "<b>Inferno</b><br />Static<br />At the end of your turn, destroy all<br />enemy stones which are touching you.<br />At the start of your turn,<br />you lose the game."
+    def resolve(self, player):
+        ### IMPLEMENT THIS
+        pass
+
+
+
+
+
+    
+
+            
+        
 
 
 
@@ -698,8 +1200,9 @@ class Player():
             self.board.update()
             for spell in self.charged_spells:
                 if spell.ischarm:
-                    actions.append(spell.name)
-                    charmlist.append(spell.name)
+                    if not((spell.name[:-1] == "Stomp") and (not candash)):
+                        actions.append(spell.name)
+                        charmlist.append(spell.name)
         if not canmove:
             if canspell:
                 self.board.update()
@@ -766,6 +1269,8 @@ class Player():
 
         elif action in charmlist:
             self.board.spelldict[action].cast(self)
+            if action[:-1] == "Stomp":
+                candash = False
             self.taketurn(canmove, candash, False, canspell)
 
         elif action in spelllist:
@@ -1208,6 +1713,20 @@ def playgame(ws):
         
         red.ws.send(json.dumps(egress))
 
+        egress = { "type": "spelltextsetup" }
+
+        egress["major1"] = board.spells[0].text
+        egress["major2"] = board.spells[1].text
+        egress["major3"] = board.spells[2].text
+        egress["minor1"] = board.spells[3].text
+        egress["minor2"] = board.spells[4].text
+        egress["minor3"] = board.spells[5].text
+        egress["charm1"] = board.spells[6].text
+        egress["charm2"] = board.spells[7].text
+        egress["charm3"] = board.spells[8].text
+        
+        red.ws.send(json.dumps(egress))
+
         while True:
             ingress = red.ws.receive()
             message = json.loads(ingress)['message']
@@ -1246,6 +1765,21 @@ def playgame(ws):
         
         blue.ws.send(json.dumps(egress))
 
+
+        egress = { "type": "spelltextsetup" }
+
+        egress["major1"] = board.spells[0].text
+        egress["major2"] = board.spells[1].text
+        egress["major3"] = board.spells[2].text
+        egress["minor1"] = board.spells[3].text
+        egress["minor2"] = board.spells[4].text
+        egress["minor3"] = board.spells[5].text
+        egress["charm1"] = board.spells[6].text
+        egress["charm2"] = board.spells[7].text
+        egress["charm3"] = board.spells[8].text
+        
+        blue.ws.send(json.dumps(egress))
+
         while True:
             ingress = blue.ws.receive()
             message = json.loads(ingress)['message']
@@ -1269,7 +1803,7 @@ def playgame(ws):
 
         jmessage(red.ws,"Ready to play!")
         jmessage(blue.ws,"Ready to play!")
-        time.sleep(3)
+        time.sleep(5)
 
         board.take_snapshot()
 

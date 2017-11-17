@@ -6,12 +6,18 @@
 import random
 
 
+### FULL MAJOR LIST: Flourish, Onlsaught, Bewitch, Syzygy, Nirvana, Inferno
 
-allmajorspells = ['Flourish', 'Flourish', 'Onslaught', 'Onslaught']
+### FULL MINOR LIST: Grow, Fury, Fire, Ice, Thunder, Levity
 
-allminorspells = ['Grow', 'Grow', 'Fury', 'Fury']
+### FULL CHARM LIST: Sprout, Stomp, Gust, Blink
 
-allcharms = ['Sprout', 'Sprout', 'Sprout']
+
+allmajorspells = [ 'Flourish', 'Onslaught', 'Bewitch', 'Syzygy', 'Nirvana', 'Inferno']
+
+allminorspells = [ 'Grow', 'Fury', 'Fire', 'Ice', 'Thunder', 'Levity']
+
+allcharms = ['Sprout', 'Stomp', 'Gust', 'Blink']
 
 
 majorspells = random.sample(allmajorspells, 3)
@@ -79,7 +85,7 @@ all_green9 = "Sprout(self, self.positions[9], 'Sprout3')"
 
 ### UNCOMMENT THE LINE BELOW TO PLAY ALL-GREEN
 
-spell_list = [all_green1, all_green2, all_green3, all_green4, all_green5, all_green6, all_green7, all_green8, all_green9]
+#spell_list = [all_green1, all_green2, all_green3, all_green4, all_green5, all_green6, all_green7, all_green8, all_green9]
 
 
 

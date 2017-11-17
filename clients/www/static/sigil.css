@@ -1,4 +1,18 @@
+  
 
+
+  .moonrefill {
+  position: relative;
+  top: -3px;
+  width: 17px;
+  height: 24px;
+  }
+
+  .sunrefill {
+  filter: brightness(130%);
+  width: 30px;
+  height: 30px;
+  }
 
   #fullBoard {
   position: relative;
@@ -132,7 +146,7 @@
   opacity: 0;
   transition-property: opacity;
   transition-duration: 2s;
-  transition-delay: 3s;
+  transition-delay: 3.5s;
   }
 
   #minornodes1 {
@@ -884,6 +898,29 @@
     transition-property: background-color;
     transition-duration: .5s;
   }
+
+
+  .doneselectingbutton{
+    visibility: hidden;
+    position: relative;
+    top: 120px;
+    font-family: Papyrus;
+    text-align: center;
+    font-size: 25px;
+    border-radius: 9px;
+    border: 2px solid black;
+    background-color: CornflowerBlue;
+    padding: 20px 28px;
+    transition-property: background-color;
+    transition-duration: .5s;
+  }
+
+  .doneselectingbutton:hover {
+    background-color: LightSkyBlue;
+    transition-property: background-color;
+    transition-duration: .5s;
+  }
+
 
 
   .startbutton{

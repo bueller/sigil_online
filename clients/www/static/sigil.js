@@ -1,5 +1,4 @@
 
-
 function main() {
   // awaiting is a global variable set to null when not awaiting anything,
   // set to 'node' when the server is awaiting a node name,
@@ -90,6 +89,9 @@ function main() {
   document.getElementById("resetbutton").addEventListener(
     'click', function() {resetClick(this);}, false);
 
+  document.getElementById("doneselectingbutton").addEventListener(
+    'click', function() {doneselectingClick(this);}, false);
+
   document.getElementById("startbutton").addEventListener(
     'click', function() {startClick(this);}, false);
 
@@ -153,6 +155,23 @@ function setupSpells(spellnamedict) {
   document.getElementById("charm1").src = "images/" + spellnamedict.charm1.slice(0, -1) + ".png";
   document.getElementById("charm2").src = "images/" + spellnamedict.charm2.slice(0, -1) + ".png";
   document.getElementById("charm3").src = "images/" + spellnamedict.charm3.slice(0, -1) + ".png";
+
+}
+
+
+function setupSpellText(spelltextdict) {
+  // spelltextdict is a JSON dictionary with keys "major2", "charm3", etc.,
+  // and values == the innerhtml strings for those respective text boxes
+  document.getElementById("majortext1").innerHTML = spelltextdict.major1;
+  document.getElementById("majortext2").innerHTML = spelltextdict.major2;
+  document.getElementById("majortext3").innerHTML = spelltextdict.major3;
+  document.getElementById("minortext1").innerHTML = spelltextdict.minor1;
+  document.getElementById("minortext2").innerHTML = spelltextdict.minor2;
+  document.getElementById("minortext3").innerHTML = spelltextdict.minor3;
+  document.getElementById("charmtext1").innerHTML = spelltextdict.charm1;
+  document.getElementById("charmtext2").innerHTML = spelltextdict.charm2;
+  document.getElementById("charmtext3").innerHTML = spelltextdict.charm3;
+
 }
 
 
@@ -184,9 +203,9 @@ function fadeIn() {
   document.getElementById("chatBox").style.opacity = 1;
   document.getElementById("chatInput").style.opacity = 1;
 
-  setTimeout(scorekeeperFadeIn, 3500);
+  setTimeout(scorekeeperFadeIn, 5000);
 
-  setTimeout(addSpellLabels, 3500);
+  setTimeout(addSpellLabels, 6000);
 }
 
 function scorekeeperFadeIn (){
@@ -252,6 +271,13 @@ function resetClick(button) {
   events.send(JSON.stringify(payload));
 }
 
+function doneselectingClick(button) {
+  awaiting = null;
+  var payload = {'message': 'doneselecting'};
+  events.send(JSON.stringify(payload));
+}
+
+
 function startClick(button) {
   joinedgame = true;
   var payload = {'message': 'joinedgame'};
@@ -267,6 +293,9 @@ function nodeClick(node) {
   if (joinedgame){
   if (awaiting == 'node') {
     var payload = {'message': node.id.slice(4), };
+    // Sends a string like 'a12', 'c3', etc, as the message
+    // (recall that the node object clicked on is always the BLUE stone, e.g., 'bluea4')
+
     events.send(JSON.stringify(payload));
     awaiting = null;
   } else if (awaiting == 'action') {
@@ -304,7 +333,26 @@ function incomingEvent(event) {
   var payload = JSON.parse(event.data);
   var box = document.getElementById('actionBox');
 
-  if (payload.type == "pong") {;} else if (payload.type == "spellsetup") {
+  if (payload.type == "pong") {;} else if (payload.type == "selectingNoButton") {
+
+    document.getElementById("dashbutton").style.visibility = "hidden";
+    document.getElementById("passbutton").style.visibility = "hidden";
+
+  } else if (payload.type == "selecting") {
+
+    document.getElementById("doneselectingbutton").style.visibility = "visible";
+    document.getElementById("dashbutton").style.visibility = "hidden";
+    document.getElementById("passbutton").style.visibility = "hidden";
+
+  } else if (payload.type == "doneselecting") {
+
+  document.getElementById("doneselectingbutton").style.visibility = "hidden";
+
+  } else if (payload.type == "spelltextsetup") {
+
+    setupSpellText(payload);
+
+  } else if (payload.type == "spellsetup") {
 
     SpellDict = payload;
     delete SpellDict['type'];
@@ -315,14 +363,6 @@ function incomingEvent(event) {
     for (spellname in ReverseSpellDict) {
     lockdict[spellname] = auxlockdict[ReverseSpellDict[spellname]];
     };
-
-
-    console.log(SpellDict);
-    console.log(ReverseSpellDict);
-
-
-
-
 
 
     setupSpells(payload);
@@ -347,7 +387,7 @@ function incomingEvent(event) {
   } else if (payload.type == "pushingoptions") {
     for (nodename of allnodenames) {
       if (payload[nodename]) {
-        document.getElementById(payload[nodename] + nodename).style.opacity = .5;
+        document.getElementById(payload[nodename] + nodename).style.opacity = .6;
       };
     };
   } else if (payload.type == "firstturnpass") {
@@ -362,13 +402,13 @@ function incomingEvent(event) {
 
     for (nodename of allnodenames) {
       if (payload[nodename]) {
-        document.getElementById(payload.playercolor + nodename).style.opacity = .5;
+        document.getElementById(payload.playercolor + nodename).style.opacity = .6;
       };
     };
 
   } else if (payload.type == "donerefilling") {
     for (nodename of allnodenames) {
-      if (document.getElementById(payload.playercolor + nodename).style.opacity == .5) {
+      if (document.getElementById(payload.playercolor + nodename).style.opacity == .6) {
         document.getElementById(payload.playercolor + nodename).style.opacity = 0;
 
       };
