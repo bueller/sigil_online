@@ -13,9 +13,9 @@ import random
 ### FULL CHARM LIST: Sprout, Stomp, Gust, Blink
 
 
-allmajorspells = [ 'Flourish', 'Onslaught', 'Bewitch', 'Syzygy', 'Nirvana', 'Inferno']
+allmajorspells = [ 'Flourish', 'Onslaught', 'Bewitch', 'Syzygy',]
 
-allminorspells = [ 'Grow', 'Fury', 'Fire', 'Ice', 'Thunder', 'Levity']
+allminorspells = [ 'Grow', 'Fury', 'Fire', 'Ice',]
 
 allcharms = ['Sprout', 'Stomp', 'Gust', 'Blink']
 

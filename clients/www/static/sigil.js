@@ -189,15 +189,15 @@ function fadeIn() {
   document.getElementById("minor3").style.opacity = 1;
   document.getElementById("charm3").style.opacity = 1;
 
-  document.getElementById("majornodes1").style.opacity = .6;
-  document.getElementById("majornodes2").style.opacity = .6;
-  document.getElementById("majornodes3").style.opacity = .6;
-  document.getElementById("minornodes1").style.opacity = .6;
-  document.getElementById("minornodes2").style.opacity = .6;
-  document.getElementById("minornodes3").style.opacity = .6;
-  document.getElementById("charmnodes1").style.opacity = .6;
-  document.getElementById("charmnodes2").style.opacity = .6;
-  document.getElementById("charmnodes3").style.opacity = .6;
+  document.getElementById("majornodes1").style.opacity = .7;
+  document.getElementById("majornodes2").style.opacity = .7;
+  document.getElementById("majornodes3").style.opacity = .7;
+  document.getElementById("minornodes1").style.opacity = .7;
+  document.getElementById("minornodes2").style.opacity = .7;
+  document.getElementById("minornodes3").style.opacity = .7;
+  document.getElementById("charmnodes1").style.opacity = .7;
+  document.getElementById("charmnodes2").style.opacity = .7;
+  document.getElementById("charmnodes3").style.opacity = .7;
 
   document.getElementById("chatInput").style.visibility = "visible";
   document.getElementById("chatBox").style.opacity = 1;
