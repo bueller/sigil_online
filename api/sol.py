@@ -45,6 +45,9 @@ class Spell():
         ### True iff it's a charm
         self.ischarm = False
 
+        ### True iff it's static
+        self.static = False
+
         ### The 'charged' attribute will equal 'red' or 'blue'
         ### if one of them has the spell fully charged, and None otherwise
         self.charged = None
@@ -194,6 +197,18 @@ class Stomp(Spell):
         player.hardmove()
 
 
+class Shadow(Spell):
+    def __init__(self, board, position, name):
+        super().__init__(board, position, name)
+        self.ischarm = True
+
+        self.text = "<b>Shadow</b><br />Make 1 move into<br />a locked spell or Sigil."
+
+
+    def resolve(self, player):
+        player.move(shadowing=True)
+
+
 
 class Blink(Spell):
     def __init__(self, board, position, name):
@@ -204,8 +219,9 @@ class Blink(Spell):
 
 
     def resolve(self, player):
-        jmessage(player.ws, "Where would you like to Blink?", "node")
+        
         while True:
+            jmessage(player.ws, "Where would you like to Blink?", "node")
             while True:
                 ingress = player.ws.receive()
                 if json.loads(ingress)['message'] == 'ping':
@@ -223,6 +239,7 @@ class Blink(Spell):
             if actualmessage in board.nodes:
                 node = board.nodes[actualmessage]
                 if node.stone != None:
+                    jmessage(player.ws, "Invalid option")
                     continue
 
                 else:
@@ -233,8 +250,8 @@ class Blink(Spell):
             else:
                 continue
 
-        jmessage(player.ws, "Select a stone to sacrifice.", "node")
         while True:
+            jmessage(player.ws, "Select a stone to sacrifice.", "node")
             while True:
                 ingress = player.ws.receive()
                 if json.loads(ingress)['message'] == 'ping':
@@ -281,7 +298,7 @@ class Gust(Spell):
 
         while True:
             jmessage(player.ws, "Select an enemy stone to Gust, or press Done if you are done selecting.", "node")
-
+        
             while True:
                 ingress = player.ws.receive()
                 if json.loads(ingress)['message'] == 'ping':
@@ -379,7 +396,79 @@ class Thunder(Spell):
 
     def resolve(self, player):
         ### IMPLEMENT THIS
-        pass
+        
+        while True:
+            jmessage(player.ws, "Select a spell.", "spell")
+            while True:
+                ingress = player.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(player.ws)
+                    pong(player.opp.ws)
+                    continue
+                else:
+                    break
+                
+            if json.loads(ingress)['message'] == 'reset':
+                raise resetException()
+
+            actualmessage = json.loads(ingress)['message']
+
+            if actualmessage in board.spelldict:
+                chosenspell = board.spelldict[actualmessage]
+                break
+
+            else:
+                continue
+
+        egress = {"type": "selecting"}
+        player.ws.send(json.dumps(egress))
+
+        
+        destroyedcount = 0
+        while destroyedcount <3:
+            jmessage(player.ws, "Select an enemy stone in " + chosenspell.name[:-1] + " to destroy, or press Done if you are done selecting.", "node")
+
+            while True:
+                ingress = player.ws.receive()
+                if json.loads(ingress)['message'] == 'ping':
+                    pong(player.ws)
+                    pong(player.opp.ws)
+                    continue
+                else:
+                    break
+                
+            if json.loads(ingress)['message'] == 'reset':
+                raise resetException()
+
+            actualmessage = json.loads(ingress)['message']
+
+            if actualmessage == 'doneselecting':
+                break
+
+            elif actualmessage in board.nodes:
+                node = board.nodes[actualmessage]
+                if node.stone != player.enemy:
+                    jmessage(player.ws, "Invalid selection")
+                    continue
+                
+                if not (node in chosenspell.position):
+                    jmessage(player.ws, "Invalid selection")
+                    continue
+
+                node.stone = None
+                board.update()
+                destroyedcount += 1
+                
+            else:
+                continue
+
+        egress = {"type": "doneselecting"}
+        player.ws.send(json.dumps(egress))
+
+
+
+        
+
 
 class Levity(Spell):
     def __init__(self, board, position, name):
@@ -387,11 +476,9 @@ class Levity(Spell):
         self.one_sigil_refill = 0
         self.two_sigil_refill = 0
 
-        self.text = "<b>Levity</b><br />Static<br />You may put a stone into any empty node<br />as your standard move each turn."
+        self.static = True
 
-    def resolve(self, player):
-        ### IMPLEMENT THIS
-        pass
+        self.text = "<b>Levity</b><br /><span style='color:BlueViolet;'>Static</span><br />You may put a stone into any empty node<br />as your standard move each turn."
 
 
 
@@ -459,8 +546,6 @@ class Ice(Spell):
         self.text = "<b>Ice</b><br /><img src='images/moonrefill.png' class='moonrefill'><br />Destroy up to 1 enemy stone<br />in each spell and charm."
 
     def resolve(self, player):
-        ### WRITE ICE RESOLUTION CODE
-
 
         egress = {"type": "selecting"}
         player.ws.send(json.dumps(egress))
@@ -549,8 +634,9 @@ class Syzygy(Spell):
             node.stone = player.color
             board.update()
 
+        jmessage(player.ws, "There are " + str(enemycount) + " enemy stones to relocate.")
         while enemycount > 0:
-            jmessage(player.ws, "Where would you like to relocate the enemy stone?", "node")
+            jmessage(player.ws, "Where would you like to relocate it?", "node")
 
             while True:
                 ingress = player.ws.receive()
@@ -582,13 +668,6 @@ class Syzygy(Spell):
 
 
 
-
-
-
-
-
-
-
 class Bewitch(Spell):
     def __init__(self, board, position, name):
         super().__init__(board, position, name)
@@ -599,10 +678,10 @@ class Bewitch(Spell):
 
     def resolve(self, player):
 
-        while True:
-            egress = {"type": "selectingNoButton"}
-            player.ws.send(json.dumps(egress))
+        egress = {"type": "selectingNoButton"}
+        player.ws.send(json.dumps(egress))
 
+        while True:
             jmessage(player.ws, "Select an enemy stone to convert.", "node")
 
             while True:
@@ -692,11 +771,9 @@ class Nirvana(Spell):
         self.one_sigil_refill = 0
         self.two_sigil_refill = 0
 
-        self.text = "<b>Nirvana</b><br />Static<br />Your dash each turn<br />only requires 1 sacrifice.<br />(You may sacrifice it from Nirvana.)"
+        self.static = True
 
-    def resolve(self, player):
-        ### IMPLEMENT THIS
-        pass
+        self.text = "<b>Nirvana</b><br /><span style='color:BlueViolet;'>Static</span><br />Your dash each turn<br />only requires 1 sacrifice.<br />(You may sacrifice it from Nirvana.)"
 
 
 
@@ -707,10 +784,9 @@ class Inferno(Spell):
         self.one_sigil_refill = 0
         self.two_sigil_refill = 0
 
-        self.text = "<b>Inferno</b><br />Static<br />At the end of your turn, destroy all<br />enemy stones which are touching you.<br />At the start of your turn,<br />you lose the game."
-    def resolve(self, player):
-        ### IMPLEMENT THIS
-        pass
+        self.static = True
+
+        self.text = "<b>Inferno</b><br /><span style='color:BlueViolet;'>Static</span><br />At the end of your turn, destroy all<br />enemy stones which are touching you.<br />At the start of your turn,<br />you lose the game."
 
 
 
@@ -934,6 +1010,7 @@ class Board():
 
         if update_score:
             jboard["score"] = self.score
+
         
         self.redplayer.ws.send(json.dumps(jboard))
         self.blueplayer.ws.send(json.dumps(jboard))
@@ -1201,15 +1278,17 @@ class Player():
             for spell in self.charged_spells:
                 if spell.ischarm:
                     if not((spell.name[:-1] == "Stomp") and (not candash)):
-                        actions.append(spell.name)
-                        charmlist.append(spell.name)
+                        if not spell.static:
+                            actions.append(spell.name)
+                            charmlist.append(spell.name)
         if not canmove:
             if canspell:
                 self.board.update()
                 for spell in self.charged_spells:
                     if not spell.ischarm and self.lock != spell:
-                        actions.append(spell.name)
-                        spelllist.append(spell.name)
+                        if not spell.static:
+                            actions.append(spell.name)
+                            spelllist.append(spell.name)
             actions.append('pass')
 
         jmessage(self.ws, "\nSelect an action:")
@@ -1251,13 +1330,13 @@ class Player():
             return None
 
         elif action in shortcuts:
-            self.move(action)
+            self.move(action, standardmove=True)
             currentplayerhasmoved = True
             self.taketurn(False, candash, cancharm, canspell)
             return None
 
         elif action == 'move':
-            self.move()
+            self.move(standardmove=True)
             currentplayerhasmoved = True
             self.taketurn(False, candash, cancharm, canspell)
             return None
@@ -1284,7 +1363,15 @@ class Player():
         ### Put any spell-specific BOT triggers here,
         ### like Inferno, which should set the global
         ### variables gameover = True and winner = self.enemy
-        pass
+        global gameover
+        global winner
+
+        if 'Inferno' in [spell.name[:-1] for spell in self.charged_spells]:
+            jmessage(self.ws, "DEATH BY INFERNO!")
+            jmessage(self.opp.ws, "DEATH BY INFERNO!")
+            gameover = True
+            winner = self.enemy
+
 
     def eot_triggers(self, whoseturn):
         ### Put code in here for every specific spell
@@ -1298,6 +1385,22 @@ class Player():
         global winner
 
         ### INSERT SPELL-SPECIFIC EOT EFFECTS HERE
+
+        if 'Inferno' in [spell.name[:-1] for spell in self.charged_spells]:
+            jmessage(self.ws, "INFERNO TRIGGER!")
+            jmessage(self.opp.ws, "INFERNO TRIGGER!")
+            for name in board.nodes:
+                node = board.nodes[name]
+                if node.stone == self.enemy:
+                    for neighbor in node.neighbors:
+                        if neighbor.stone == self.color:
+                            node.stone = None
+            board.update(True)
+
+
+
+
+        ### END OF SPELL-SPECIFIC EOT EFFECTS
 
         redtotal = 0
         bluetotal = 1
@@ -1380,9 +1483,11 @@ class Player():
 
 
 
-    def move(self, preloaded = False):
+    def move(self, preloaded = False, standardmove = False, shadowing=False):
         ### If the user clicked on a node while they had 'move' action available,
         ### we call this move function with preloaded == the node they clicked.
+
+        ### standardmove is True iff this is the player's standard move for the turn.
         if not preloaded:
             jmessage(self.ws, "Where would you like to move? ", "node")
 
@@ -1409,20 +1514,65 @@ class Player():
 
         if node.stone == self.color:
             jmessage(self.ws, "Invalid move-- you already have a stone there!")
-            self.move()
+            self.move(standardmove=standardmove)
             return None
 
         elif not adjacent:
-            jmessage(self.ws, "Invalid move-- that's not adjacent to you!")
-            self.move()
-            return None
+            if not (standardmove and ("Levity" in [spell.name[:-1] for spell in self.charged_spells])):
+                jmessage(self.ws, "Invalid move-- that's not adjacent to you!")
+                self.move(standardmove=standardmove)
+                return None
+            else:
+                if node.stone == None:
+                    node.stone = self.color
+                    self.board.update()
+                else:
+                    jmessage(self.ws, "Invalid move-- Levity moves can only be into empty nodes!")
+                    self.move(standardmove=standardmove)
+                    return None
+
 
         elif node.stone == None:
+            if shadowing:
+                if node.name in ['a1', 'b1', 'c1']:
+                    pass
+                else:
+                    locknodes = []
+                    if red.lock != None:
+                        locknodes += red.lock.position
+                    if blue.lock != None:
+                        locknodes += blue.lock.position
+
+                    if node in locknodes:
+                        pass
+                    else:
+                        jmessage(self.ws, "Invalid Shadow move")
+                        self.move(shadowing=True)
+                        return None
+
             node.stone = self.color
             self.board.update()
 
         elif node.stone == self.enemy:
+            if shadowing:
+                if node.name in ['a1', 'b1', 'c1']:
+                    pass
+                else:
+                    locknodes = []
+                    if red.lock != None:
+                        locknodes += red.lock.position
+                    if blue.lock != None:
+                        locknodes += blue.lock.position
+
+                    if node in locknodes:
+                        pass
+                    else:
+                        jmessage(self.ws, "Invalid Shadow move")
+                        self.move(shadowing=True)
+                        return None
             self.pushenemy(node)
+
+
 
     def softmove(self):
         jmessage(self.ws, "Where would you like to soft move? ", "node")
@@ -1505,7 +1655,12 @@ class Player():
             self.pushenemy(node)
 
     def dash(self):
-        jmessage(self.ws, "Select your first stone to sacrifice. ", "node")
+        if 'Nirvana' in [spell.name[:-1] for spell in self.charged_spells]:
+            jmessage(self.ws, "Select your stone to sacrifice. ", "node")
+            nirvana = True
+        else:
+            jmessage(self.ws, "Select your first stone to sacrifice. ", "node")
+            nirvana = False
         
         while True:
             ingress = self.ws.receive()
@@ -1528,34 +1683,34 @@ class Player():
         self.board.nodes[sac1].stone = None
         self.board.update()
 
-        
-        while True:
-            jmessage(self.ws, "Select your second stone to sacrifice. ", "node")
-            
-
+        if not nirvana:
             while True:
-                ingress = self.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(self.ws)
-                    pong(self.opp.ws)
+                jmessage(self.ws, "Select your second stone to sacrifice. ", "node")
+                
+
+                while True:
+                    ingress = self.ws.receive()
+                    if json.loads(ingress)['message'] == 'ping':
+                        pong(self.ws)
+                        pong(self.opp.ws)
+                        continue
+                    else:
+                        break
+
+
+
+                if json.loads(ingress)['message'] == 'reset':
+                        raise resetException()
+                sac2 = json.loads(ingress)['message']
+                if (self.board.nodes[sac2].stone != self.color):
+                    jmessage(self.ws, "You do not have a stone there!")
                     continue
                 else:
                     break
-
-
-
-            if json.loads(ingress)['message'] == 'reset':
-                    raise resetException()
-            sac2 = json.loads(ingress)['message']
-            if (self.board.nodes[sac2].stone != self.color):
-                jmessage(self.ws, "You do not have a stone there!")
-                continue
-            else:
-                break
-
         
-        self.board.nodes[sac2].stone = None
-        self.board.update()
+            self.board.nodes[sac2].stone = None
+            self.board.update()
+            
         self.move()
 
         ### Update the new score
@@ -1803,7 +1958,7 @@ def playgame(ws):
 
         jmessage(red.ws,"Ready to play!")
         jmessage(blue.ws,"Ready to play!")
-        time.sleep(5)
+        time.sleep(3)
 
         board.take_snapshot()
 

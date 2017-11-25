@@ -20,6 +20,7 @@
   }
 
   #board {
+  filter:invert(100%);
   position: absolute;
   width: 950px;
   height: 950px;
@@ -43,9 +44,9 @@
   #major1 {
   position: absolute;
   top: 529px;
-  left: 115px;
-  width: 191px;
-  height: 191px;
+  left: 114px;
+  width: 193px;
+  height: 193px;
   transform: rotate(59deg);
   opacity: 0;
   transition-property: opacity;
@@ -56,9 +57,9 @@
   #majornodes1 {
   position: absolute;
   top: 529px;
-  left: 115px;
-  width: 191px;
-  height: 191px;
+  left: 114px;
+  width: 193px;
+  height: 193px;
   transform: rotate(60deg);
   opacity: 0;
   transition-property: opacity;
@@ -76,8 +77,8 @@
   position: absolute;
   top: 530.5px;
   left: 648px;
-  width: 191px;
-  height: 191px;
+  width: 193px;
+  height: 193px;
   transform: rotate(300deg);
   opacity: 0;
   transition-property: opacity;
@@ -89,8 +90,8 @@
   position: absolute;
   top: 530.5px;
   left: 648px;
-  width: 191px;
-  height: 191px;
+  width: 193px;
+  height: 193px;
   transform: rotate(301deg);
   opacity: 0;
   transition-property: opacity;
@@ -106,10 +107,10 @@
 
   #major3 {
   position: absolute;
-  top: 71.5px;
-  left: 380px;
-  width: 191px;
-  height: 191px;
+  top: 70.5px;
+  left: 379px;
+  width: 193px;
+  height: 193px;
   transform: rotate(180deg);
   opacity: 0;
   transition-property: opacity;
@@ -120,10 +121,10 @@
 
 #majornodes3 {
   position: absolute;
-  top: 71.5px;
-  left: 380px;
-  width: 191px;
-  height: 191px;
+  top: 70.5px;
+  left: 379px;
+  width: 193px;
+  height: 193px;
   transform: rotate(181deg);
   opacity: 0;
   transition-property: opacity;
@@ -139,10 +140,10 @@
 
   #minor1 {
   position:absolute;
-  top: 701.5px;
-  left: 399.5px;
-  width: 150px;
-  height: 150px;
+  top: 700.5px;
+  left: 398px;
+  width: 152px;
+  height: 152px;
   opacity: 0;
   transition-property: opacity;
   transition-duration: 2s;
@@ -151,10 +152,10 @@
 
   #minornodes1 {
   position:absolute;
-  top: 701.5px;
-  left: 399.5px;
-  width: 150px;
-  height: 150px;
+  top: 700.5px;
+  left: 398px;
+  width: 152px;
+  height: 152px;
   opacity: 0;
   transition-property: opacity;
   transition-duration: 2s;
@@ -171,10 +172,10 @@
 
   #minor2 {
   position:absolute;
-  top: 245px;
-  left: 665.5px;
-  width: 150px;
-  height: 150px;
+  top: 244px;
+  left: 664.5px;
+  width: 151px;
+  height: 151px;
   transform: rotate(240deg);
   opacity: 0;
   transition-property: opacity;
@@ -184,10 +185,10 @@
 
   #minornodes2 {
   position:absolute;
-  top: 245px;
-  left: 665.5px;
-  width: 150px;
-  height: 150px;
+  top: 244px;
+  left: 664.5px;
+  width: 151px;
+  height: 151px;
   transform: rotate(240deg);
   opacity: 0;
   transition-property: opacity;
@@ -203,10 +204,10 @@
 
   #minor3 {
   position:absolute;
-  top: 242px;
-  left: 137px;
-  width: 150px;
-  height: 150px;
+  top: 241px;
+  left: 136px;
+  width: 151px;
+  height: 151px;
   transform: rotate(120deg);
   opacity: 0;
   transition-property: opacity;
@@ -217,10 +218,10 @@
 
   #minornodes3 {
   position:absolute;
-  top: 242px;
-  left: 137px;
-  width: 150px;
-  height: 150px;
+  top: 241px;
+  left: 136px;
+  width: 151px;
+  height: 151px;
   transform: rotate(120deg);
   opacity: 0;
   transition-property: opacity;
@@ -239,8 +240,8 @@
   position:absolute;
   top: 584px;
   left: 378px;
-  width: 93px;
-  height: 93px;
+  width: 94px;
+  height: 94px;
   opacity: 0;
   transition-property: opacity;
   transition-duration: 2s;
@@ -270,8 +271,8 @@
   position:absolute;
   top: 393px;
   left: 595px;
-  width: 93px;
-  height: 93px;
+  width: 94px;
+  height: 94px;
   transform: rotate(240deg);
   opacity: 0;
   transition-property: opacity;
@@ -303,8 +304,8 @@
   position:absolute;
   top: 301px;
   left: 318px;
-  width: 93px;
-  height: 93px;
+  width: 94px;
+  height: 94px;
   transform: rotate(120deg);
   opacity: 0;
   transition-property: opacity;
@@ -362,32 +363,32 @@
 
   #reda2 {
   position: absolute;
-  top: 638px;
+  top: 639px;
   left: 148px;
   }
 
   #reda3 {
   position: absolute;
-  top: 663px;
-  left: 207.5px;
+  top: 665px;
+  left: 208px;
   }
 
   #reda4 {
   position: absolute;
-  top: 614px;
-  left: 250px;
+  top: 615px;
+  left: 251px;
   }
 
   #reda5 {
   position: absolute;
-  top: 559px;
-  left: 217px;
+  top: 559.5px;
+  left: 217.5px;
   }
 
   #reda6 {
   position: absolute;
   top: 573.5px;
-  left: 154px;
+  left: 153.5px;
   }
 
   #reda7 {
@@ -398,15 +399,15 @@
 
   #reda8 {
   position: absolute;
-  top: 721px;
+  top: 720.5px;
   left: 459px;
   }
 
 
    #reda9 {
   position: absolute;
-  top: 782.3px;
-  left: 423.6px;
+  top: 782px;
+  left: 423px;
   }
 
   #reda10 {
@@ -443,32 +444,32 @@
 
   #redb2 {
   position: absolute;
-  top: 639px;
-  left: 776px;
+  top: 639.5px;
+  left: 778px;
   }
 
   #redb3 {
   position: absolute;
   top: 575px;
-  left: 769px;
+  left: 771px;
   }
 
   #redb4 {
   position: absolute;
-  top: 561px;
-  left: 706px;
+  top: 561.5px;
+  left: 706.5px;
   }
 
   #redb5 {
   position: absolute;
-  top: 617px;
-  left: 673.5px;
+  top: 618px;
+  left: 674.5px;
   }
 
   #redb6 {
   position: absolute;
-  top: 665px;
-  left: 717px;
+  top: 667px;
+  left: 718px;
   }
 
   #redb7 {
@@ -479,8 +480,8 @@
 
   #redb8 {
   position: absolute;
-  top: 325.6px;
-  left: 690.2px;
+  top: 325.5px;
+  left: 690px;
   }
 
   #redb9 {
@@ -491,8 +492,8 @@
 
   #redb10 {
   position: absolute;
-  top: 264px;
-  left: 725.5px;
+  top: 263.5px;
+  left: 725px;
   }
 
   #redb11 {
@@ -528,13 +529,13 @@
   #redc3 {
   position: absolute;
   top: 135px;
-  left: 408.5px;
+  left: 407.5px;
   }
 
   #redc4 {
   position: absolute;
-  top: 196.5px;
-  left: 428.5px;
+  top: 197px;
+  left: 428px;
   }
 
   #redc5 {
@@ -551,7 +552,7 @@
 
   #redc7 {
   position: absolute;
-  top: 332px;
+  top: 332.3px;
   left: 349px;
   }
 
@@ -593,42 +594,41 @@
 
 
 
-
-
-  #bluea1 {
+#bluea1 {
   position: absolute;
   top: 556px;
   left: 53px;
   }
 
+
   #bluea2 {
   position: absolute;
-  top: 638px;
+  top: 639px;
   left: 148px;
   }
 
   #bluea3 {
   position: absolute;
-  top: 663px;
-  left: 207.5px;
+  top: 665px;
+  left: 208px;
   }
 
   #bluea4 {
   position: absolute;
-  top: 614px;
-  left: 250px;
+  top: 615px;
+  left: 251px;
   }
 
   #bluea5 {
   position: absolute;
-  top: 559px;
-  left: 217px;
+  top: 559.5px;
+  left: 217.5px;
   }
 
   #bluea6 {
   position: absolute;
   top: 573.5px;
-  left: 154px;
+  left: 153.5px;
   }
 
   #bluea7 {
@@ -639,14 +639,15 @@
 
   #bluea8 {
   position: absolute;
-  top: 721px;
+  top: 720.5px;
   left: 459px;
   }
 
-  #bluea9 {
+
+   #bluea9 {
   position: absolute;
-  top: 782.3px;
-  left: 423.6px;
+  top: 782px;
+  left: 423px;
   }
 
   #bluea10 {
@@ -683,32 +684,32 @@
 
   #blueb2 {
   position: absolute;
-  top: 639px;
-  left: 776px;
+  top: 639.5px;
+  left: 778px;
   }
 
   #blueb3 {
   position: absolute;
   top: 575px;
-  left: 769px;
+  left: 771px;
   }
 
   #blueb4 {
   position: absolute;
-  top: 561px;
-  left: 706px;
+  top: 561.5px;
+  left: 706.5px;
   }
 
   #blueb5 {
   position: absolute;
-  top: 617px;
-  left: 673.5px;
+  top: 618px;
+  left: 674.5px;
   }
 
   #blueb6 {
   position: absolute;
-  top: 665px;
-  left: 717px;
+  top: 667px;
+  left: 718px;
   }
 
   #blueb7 {
@@ -719,8 +720,8 @@
 
   #blueb8 {
   position: absolute;
-  top: 325.6px;
-  left: 690.2px;
+  top: 325.5px;
+  left: 690px;
   }
 
   #blueb9 {
@@ -731,8 +732,8 @@
 
   #blueb10 {
   position: absolute;
-  top: 264px;
-  left: 725.5px;
+  top: 263.5px;
+  left: 725px;
   }
 
   #blueb11 {
@@ -768,13 +769,13 @@
   #bluec3 {
   position: absolute;
   top: 135px;
-  left: 408.5px;
+  left: 407.5px;
   }
 
   #bluec4 {
   position: absolute;
-  top: 196.5px;
-  left: 428.5px;
+  top: 197px;
+  left: 428px;
   }
 
   #bluec5 {
@@ -791,7 +792,7 @@
 
   #bluec7 {
   position: absolute;
-  top: 332px;
+  top: 332.3px;
   left: 349px;
   }
 
@@ -830,6 +831,8 @@
   top: 168px;
   left: 295px;
   }
+
+  
 
 
 
@@ -986,37 +989,37 @@
   }
 
  
-  .scoreb1 {
+  .scorer1 {
   position: absolute;
   top: 493px;
   left: 430px;
   }
 
-  .scoreb2 {
+  .scorer2 {
   position: absolute;
   top: 538px;
   left: 458px;
   }
 
-  .scoreb3 {
+  .scorer3 {
   position: absolute;
   top: 482px;
   left: 488px;
   }
 
-  .scorer1 {
+  .scoreb1 {
   position: absolute;
   top: 423px;
   left: 430px; 
   }
 
-  .scorer2 {
+  .scoreb2 {
   position: absolute;
   top: 379px;
   left: 460px;
   }
 
-  .scorer3 {
+  .scoreb3 {
   position: absolute;
   top: 437px;
   left: 488px;
@@ -1723,8 +1726,6 @@
   transition-delay: 3s;
 
   }
-
-
 
 
 

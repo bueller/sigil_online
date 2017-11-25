@@ -6,18 +6,20 @@
 import random
 
 
+
+
 ### FULL MAJOR LIST: Flourish, Onlsaught, Bewitch, Syzygy, Nirvana, Inferno
 
 ### FULL MINOR LIST: Grow, Fury, Fire, Ice, Thunder, Levity
 
-### FULL CHARM LIST: Sprout, Stomp, Gust, Blink
+### FULL CHARM LIST: Sprout, Stomp, Gust, Blink, Shadow
 
 
-allmajorspells = [ 'Flourish', 'Onslaught', 'Bewitch', 'Syzygy',]
+allmajorspells = [ 'Flourish', 'Onslaught', 'Bewitch', 'Syzygy', 'Nirvana', 'Inferno', ]
 
-allminorspells = [ 'Grow', 'Fury', 'Fire', 'Ice',]
+allminorspells = [ 'Grow', 'Fury', 'Fire', 'Ice', 'Thunder', 'Levity',]
 
-allcharms = ['Sprout', 'Stomp', 'Gust', 'Blink']
+allcharms = ['Sprout', 'Stomp', 'Gust', 'Blink', 'Shadow']
 
 
 majorspells = random.sample(allmajorspells, 3)

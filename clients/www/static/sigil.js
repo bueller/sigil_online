@@ -2,6 +2,7 @@
 function main() {
   // awaiting is a global variable set to null when not awaiting anything,
   // set to 'node' when the server is awaiting a node name,
+  //set to 'spell' when the server is awaiting a choice of spell,
   // and set to 'action' when the server is awaiting an action.
 
   // actionlist is the list of available actions, when awaiting == 'action'.
@@ -105,10 +106,18 @@ setInterval(ping, 3000);
 
 
 function spellClick(spellposition) {
+  //This is ONLY triggered for spells, not charms
+
   // Takes in a spell position, e.g., "major2", "minor3"
-  console.log("Clicked!");
+  // and sends a spellname, e.g., 'Flourish3', 'Grow3'
   var spellname = SpellDict[spellposition];
   if ((awaiting == 'action') && actionlist.includes(spellname)) {
+    var payload = {'message': spellname};
+    events.send(JSON.stringify(payload));
+    awaiting = null;
+
+  } else if (awaiting == 'spell') {
+
     var payload = {'message': spellname};
     events.send(JSON.stringify(payload));
     awaiting = null;
@@ -518,7 +527,8 @@ function updateBoard(boardstate) {
     var countdown = boardstate["countdown"];
     document.getElementById("countdown").innerHTML = countdown;
 
-  }
+}
+
 
 
 function activateLock(lockIdentifierChars, color) {
