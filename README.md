@@ -5,6 +5,6 @@ This is an online version of my board game "Sigil". I have been tinkering with t
 for about 10 years. This digital version was created in the past month, as a coding exercise & a way to play the game
 with remote friends.
 
-To launch the game, type "docker-compose build && docker-compose up" into the command line. This will launch the Sigil daemon.
-(Sometimes it takes a couple tries before it builds properly.) The first player to connect will be Red, the second player 
-to connect will be Blue, and the game begins once both are connected.
+I did not use any special frameworks for making games; everything was done essentially from scratch, as an exercise to teach myself about web development. The back-end game logic is written in Python and daemonized using Flask (100% by me).  The front-end JavaScript, html, css was also 100% written by me.  A friend then helped me put the resulting webapp in a Docker container and set up the Docker configuration files.
+
+The game "Sigil" itself is my own design, and the image file of the Sigil game board was created by me using Inkscape. The image files for the spell circles and the red/blue stones were pulled from the internet.
