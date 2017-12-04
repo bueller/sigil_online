@@ -1,14 +1,18 @@
 # sigil
 Daemon and client for the online Sigil game
 
-This is an online version of my board game "Sigil". I have been tinkering with the design of Sigil as a physical board game
-for about 10 years. This digital version was created more recently, as a coding exercise & a way to play the game
-with remote friends.
 
-I did not use any special frameworks for making games; everything was done essentially from scratch, as an exercise to teach myself about web development. The back-end game logic is written in Python and daemonized using Flask (100% by me).  The front-end JavaScript, html, css was also 100% written by me.  A friend then helped me put the resulting webapp in a Docker container and set up the Docker configuration files.
+What Is Sigil?
 
-The game "Sigil" itself is my own design, and the image file of the Sigil game board was created by me using Inkscape. The image files for the spell circles and the red/blue stones were pulled from the internet.
+Sigil is a strategy board game in which two players, Red and Blue, battle for control of a magical 'spell circle'. The board is randomly generated at the beginning of each game, but other than this initial setup, the gameplay itself has no randomness & no hidden information.  I have been designing Sigil as a physical board game for about 10 years and have had over a dozen dedicated playtesters throughout this process.
 
+
+What's In This Repo?
+
+This repo is an online version of the game. The 'api' folder contains the back-end game logic (written in Python), and the clients/www/static folder contains the front-end GUI (written in JavaScript/HTML/CSS).
+
+
+How Do I Play?
 
 To start a game: With Docker installed, and in the main directory (with the 'docker-compose.yml' file): type
 
