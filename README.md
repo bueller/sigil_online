@@ -1,6 +1,4 @@
 # sigil
-Daemon and client for the online Sigil game
-
 
 What Is Sigil?
 
@@ -9,7 +7,7 @@ Sigil is a strategy board game in which two players, Red and Blue, battle for co
 
 What's In This Repo?
 
-This repo is an online version of the game. The 'api' folder contains the back-end game logic (written in Python), and the clients/www/static folder contains the front-end GUI (written in JavaScript/HTML/CSS).
+This repo contains an online version of Sigil. The 'api' folder has the back-end game logic (written in Python), and the clients/www/static folder has the front-end GUI (written in JavaScript/HTML/CSS).
 
 
 How Do I Play?
@@ -21,3 +19,6 @@ docker-compose build && docker-compose up
 into the terminal. This will launch the daemon, which will be listening on some port (for me it is port 8000), and
 you should then be able to navigate to it on a browser (by typing, e.g., "localhost:8000" into the address bar).
 The first player to join will be Red, the second player to join will be Blue.
+
+
+Special thanks to caervs for helping with the Docker containerization.
