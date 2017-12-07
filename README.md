@@ -16,7 +16,7 @@ To start a game: With Docker installed, and in the main directory (with the 'doc
 
 docker-compose build && docker-compose up
 
-into the terminal. This will launch the daemon, which will be listening on some port (for me it is port 8000), and
+into the terminal. This will launch the daemon, which will be listening on port 8000, and
 you should then be able to navigate to it on a browser (by typing, e.g., "localhost:8000" into the address bar).
 The first player to join will be Red, the second player to join will be Blue.
 
