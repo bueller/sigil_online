@@ -9,6 +9,7 @@ import time
 import gevent
 from flask import Flask
 from flask_sockets import Sockets
+from random import randint
 
 import sol_spells
 
@@ -1756,6 +1757,11 @@ class Player():
 
         pushingoptionnames = [x.name for x in pushingoptions]
 
+        if len(pushingoptionnames) == 1:
+            self.board.nodes[pushingoptionnames[0]].stone = self.enemy
+            self.board.update()
+            return None
+
         while True:
             egress = {"type": "pushingoptions", }
             for nodename in pushingoptionnames:
@@ -1829,6 +1835,8 @@ app = Flask(__name__)
 sockets = Sockets(app)
 
 totalplayers = 0
+whoisred = randint(1,2)
+whoisblue = 3 - whoisred
 redjoined = False
 bluejoined = False
 
@@ -1847,7 +1855,7 @@ def playgame(ws):
     global gameover
     global winner
     totalplayers += 1
-    if totalplayers == 1:
+    if totalplayers == whoisred:
         red.ws = ws
         jmessage(red.ws, "You are RED this game.")
 
@@ -1899,7 +1907,7 @@ def playgame(ws):
             gevent.sleep(3)
 
 
-    elif totalplayers == 2:
+    elif totalplayers == whoisblue:
         blue.ws = ws
         jmessage(blue.ws,"You are BLUE this game.")
 
