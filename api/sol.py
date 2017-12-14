@@ -20,7 +20,6 @@ import sol_spells
 
 
 
-
 class Node():
     def __init__(self, name):
         self.name = name
@@ -1787,6 +1786,12 @@ class Player():
             self.board.update()
             jmessage(self.ws, "Enemy stone pushed to " + push)
             break
+
+
+
+
+
+
 
 
 ##############  GAME LOOP  ##############
