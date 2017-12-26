@@ -473,7 +473,7 @@ function updateBoard(boardstate) {
 
   var lastplayname = boardstate["last_play"]
   var lastplayer = boardstate["last_player"]
-  document.getElementById(lastplayname).src = "images/"+lastplayer+"stonehalo2.png";
+  document.getElementById(lastplayname).src = "images/"+lastplayer+"stonehalo.png";
   document.getElementById(lastplayname).style.opacity = 1;
 
 
