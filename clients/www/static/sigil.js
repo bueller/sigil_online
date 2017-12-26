@@ -6,7 +6,6 @@ function main() {
   // and set to 'action' when the server is awaiting an action.
 
   // actionlist is the list of available actions, when awaiting == 'action'.
-
   awaiting = null;
   actionlist = null;
   joinedgame = false;
@@ -56,9 +55,9 @@ function main() {
     "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "c11", "c12", "c13"
     ];
 
-  var allbluestones = document.getElementsByClassName("bluestone");
-  for (var i = 0; i < allbluestones.length; i++) {
-    allbluestones[i].addEventListener('click', function () {nodeClick(this);}, false);
+  var allstones = document.getElementsByClassName("stone");
+  for (var i = 0; i < allstones.length; i++) {
+    allstones[i].addEventListener('click', function () {nodeClick(this);}, false);
   };
 
   document.getElementById("majornodes1").addEventListener(
@@ -295,13 +294,10 @@ function startClick(button) {
 }
 
 
-
-
-
 function nodeClick(node) {
   if (joinedgame){
   if (awaiting == 'node') {
-    var payload = {'message': node.id.slice(4), };
+    var payload = {'message': node.id, };
     // Sends a string like 'a12', 'c3', etc, as the message
     // (recall that the node object clicked on is always the BLUE stone, e.g., 'bluea4')
 
@@ -309,23 +305,23 @@ function nodeClick(node) {
     awaiting = null;
   } else if (awaiting == 'action') {
 
-      if (actionlist.includes(SpellDict['charm1']) && node.id == 'bluea7') {
+      if (actionlist.includes(SpellDict['charm1']) && node.id == 'a7') {
       var payload = {'message': SpellDict['charm1'], };
       events.send(JSON.stringify(payload));
       awaiting = null;
 
-    } else if (actionlist.includes(SpellDict['charm2']) && node.id == 'blueb7') {
+    } else if (actionlist.includes(SpellDict['charm2']) && node.id == 'b7') {
       var payload = {'message': SpellDict['charm2'], };
       events.send(JSON.stringify(payload));
       awaiting = null;
 
-    } else if (actionlist.includes(SpellDict['charm3']) && node.id == 'bluec7') {
+    } else if (actionlist.includes(SpellDict['charm3']) && node.id == 'c7') {
       var payload = {'message': SpellDict['charm3'], };
       events.send(JSON.stringify(payload));
       awaiting = null;
 
     } else if (actionlist.includes('move')) {
-      var payload = {'message': node.id.slice(4), };
+      var payload = {'message': node.id, };
       events.send(JSON.stringify(payload));
       awaiting = null;
 
@@ -380,7 +376,7 @@ function incomingEvent(event) {
     box.innerHTML += "<br/>" + payload.message;
 
     box.scrollTop = box.scrollHeight;
-    
+
   } else if (payload.type == "whoseturndisplay") {
     var turnbox = document.getElementById("whoseturndisplay");
     if (payload.color == "red") {
@@ -395,8 +391,12 @@ function incomingEvent(event) {
     updateBoard(payload);
   } else if (payload.type == "pushingoptions") {
     for (nodename of allnodenames) {
-      if (payload[nodename]) {
-        document.getElementById(payload[nodename] + nodename).style.opacity = .6;
+      if (payload[nodename] == "red") {
+        document.getElementById(nodename).src = "images/redstone.png";
+        document.getElementById(nodename).style.opacity = .6;
+      } else if (payload[nodename] == "blue") {
+        document.getElementById(nodename).src = "images/bluestone.png";
+        document.getElementById(nodename).style.opacity = .6;
       };
     };
   } else if (payload.type == "firstturnpass") {
@@ -411,14 +411,21 @@ function incomingEvent(event) {
 
     for (nodename of allnodenames) {
       if (payload[nodename]) {
-        document.getElementById(payload.playercolor + nodename).style.opacity = .6;
+        if (payload.playercolor == "red") {
+            document.getElementById.src = "images/redstone.png";
+            document.getElementById(nodename).style.opacity = .6;
+        } else if (payload.playercolor == "blue") {
+            document.getElementById.src = "images/bluestone.png";
+            document.getElementById(nodename).style.opacity = .6;
+        };
       };
     };
 
   } else if (payload.type == "donerefilling") {
     for (nodename of allnodenames) {
-      if (document.getElementById(payload.playercolor + nodename).style.opacity == .6) {
-        document.getElementById(payload.playercolor + nodename).style.opacity = 0;
+      if (document.getElementById(nodename).style.opacity == .6) {
+        document.getElementById(nodename).src = "images/emptystone.png";
+        document.getElementById(nodename).style.opacity = 1;
 
       };
     };
@@ -450,20 +457,24 @@ function incomingEvent(event) {
 
 
 function updateBoard(boardstate) {
-  
+
   for (var name of allnodenames) {
     if (boardstate[name] == "red") {
-      document.getElementById("blue" + name).style.opacity = 0;
-      document.getElementById("red" + name).style.opacity = 1;
+        document.getElementById(name).src = "images/redstone.png";
+        document.getElementById(name).style.opacity = 1;
     } else if (boardstate[name] == "blue") {
-      document.getElementById("red" + name).style.opacity = 0;
-      document.getElementById("blue" + name).style.opacity = 1;
+        document.getElementById(name).src = "images/bluestone.png";
+        document.getElementById(name).style.opacity = 1;
     } else {
-      document.getElementById("red" + name).style.opacity = 0;
-      document.getElementById("blue" + name).style.opacity = 0;
-      };
-    };
+        document.getElementById(name).src = "images/emptystone.png";
+        document.getElementById(name).style.opacity = 1;
+    }
+  }
 
+  var lastplayname = boardstate["last_play"]
+  var lastplayer = boardstate["last_player"]
+  document.getElementById(lastplayname).src = "images/"+lastplayer+"stonehalo2.png";
+  document.getElementById(lastplayname).style.opacity = 1;
 
 
 
@@ -581,6 +592,7 @@ function chatInputKeypress(e) {
     document.getElementById('chatInput').value = '';
   };
 }
+
 
 
 
