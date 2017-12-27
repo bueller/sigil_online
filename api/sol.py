@@ -67,6 +67,9 @@ class Spell():
         if self.ischarm:
             for node in self.position:
                 node.stone = None
+                if (player.board.last_play == node.name):
+                    player.board.last_play = None
+                    player.board.last_player = None
 
         elif player.sigils == 3:
             pass
@@ -74,6 +77,9 @@ class Spell():
         else:
             for node in self.position:
                 node.stone = None
+                if (player.board.last_play == node.name):
+                    player.board.last_play = None
+                    player.board.last_player = None
 
             if player.sigils == 0:
                 refills = 0
@@ -273,6 +279,9 @@ class Blink(Spell):
 
                 else:
                     node.stone = None
+                    if (player.board.last_play == node.name):
+                        player.board.last_play = None
+                        player.board.last_player = None
                     break
 
             else:
@@ -330,6 +339,9 @@ class Gust(Spell):
                     continue
 
                 node.stone = None
+                if (player.board.last_play == node.name):
+                    player.board.last_play = None
+                    player.board.last_player = None
                 board.update()
                 gustingstonecount += 1
                 if gustingstonecount == 2:
@@ -456,6 +468,9 @@ class Thunder(Spell):
                     continue
 
                 node.stone = None
+                if (player.board.last_play == node.name):
+                    player.board.last_play = None
+                    player.board.last_player = None
                 board.update()
                 destroyedcount += 1
                 
@@ -535,6 +550,9 @@ class Fire(Spell):
                 for neighbor in node.neighbors:
                     if neighbor.stone == player.color:
                         node.stone = None
+                        if (player.board.last_play == node.name):
+                            player.board.last_play = None
+                            player.board.last_player = None
 
 
 class Ice(Spell):
@@ -593,6 +611,9 @@ class Ice(Spell):
                 for spellnum in iceablespells:
                     if node in board.positions[spellnum]:
                         node.stone = None
+                        if (player.board.last_play == node.name):
+                            player.board.last_play = None
+                            player.board.last_player = None
                         iceablespells.remove(spellnum)
                         board.update()
                         continue
@@ -862,6 +883,9 @@ class Board():
         ### A string that tells which player is winning and by how much.
         self.score = 'b1'
 
+        self.last_play = None
+        self.last_player = None
+
 
     def take_snapshot(self):
 
@@ -889,6 +913,9 @@ class Board():
             snapshot["bluelock"] = None
 
         snapshot["countdown"] = self.countdown
+
+        snapshot["last_play"] = self.last_play
+        snapshot["last_player"] = self.last_player
 
         self.snapshot = snapshot
 
@@ -1011,6 +1038,8 @@ class Board():
         if update_score:
             jboard["score"] = self.score
 
+        jboard["last_player"] = self.last_player
+        jboard["last_play"] = self.last_play
         
         self.redplayer.ws.send(json.dumps(jboard))
         self.blueplayer.ws.send(json.dumps(jboard))
@@ -1395,6 +1424,9 @@ class Player():
                     for neighbor in node.neighbors:
                         if neighbor.stone == self.color:
                             node.stone = None
+                            if (self.board.last_play == node.name):
+                                self.board.last_play = None
+                                self.board.last_player = None
             board.update(True)
 
 
@@ -1459,6 +1491,8 @@ class Player():
             return None
         else:
             node.stone = self.color
+            self.board.last_play = node.name
+            self.board.last_player = self.color
             self.board.update()
 
             egress = {"type": "firstturnpass",}
@@ -1525,6 +1559,8 @@ class Player():
             else:
                 if node.stone == None:
                     node.stone = self.color
+                    self.board.last_play = node.name
+                    self.board.last_player = self.color
                     self.board.update()
                 else:
                     jmessage(self.ws, "Invalid move-- Levity moves can only be into empty nodes!")
@@ -1551,6 +1587,8 @@ class Player():
                         return None
 
             node.stone = self.color
+            self.board.last_play = node.name
+            self.board.last_player = self.color
             self.board.update()
 
         elif node.stone == self.enemy:
@@ -1598,6 +1636,8 @@ class Player():
 
         if node.stone == None and adjacent:
             node.stone = self.color
+            self.board.last_play = nodename
+            self.board.last_player = self.color
             self.board.update()
 
         elif node.stone == self.color:
@@ -1681,6 +1721,9 @@ class Player():
             return None
 
         self.board.nodes[sac1].stone = None
+        if (self.board.last_play == sac1):
+            self.board.last_play = None
+            self.board.last_player = None
         self.board.update()
 
         if not nirvana:
@@ -1709,6 +1752,9 @@ class Player():
                     break
         
             self.board.nodes[sac2].stone = None
+            if (self.board.last_play == sac2):
+                self.board.last_play = None
+                self.board.last_player = None
             self.board.update()
             
         self.move()
@@ -1718,6 +1764,8 @@ class Player():
 
     def pushenemy(self, node):
         node.stone = self.color
+        self.board.last_play = node.name
+        self.board.last_player = self.color
         self.board.update()
         ### push the enemy stone. Return a list of options
         ### for where to push it.
@@ -1996,6 +2044,8 @@ def playgame(ws):
 
                 for nodename in board.nodes:
                     board.nodes[nodename].stone = board.snapshot[nodename]
+                board.last_play = board.snapshot["last_play"]
+                board.last_player = board.snapshot["last_player"]
 
                 board.update()
                 continue
@@ -2019,6 +2069,8 @@ def playgame(ws):
 
                 for nodename in board.nodes:
                     board.nodes[nodename].stone = board.snapshot[nodename]
+                board.last_play = board.snapshot["last_play"]
+                board.last_player = board.snapshot["last_player"]
 
                 board.update()
                 continue
@@ -2100,6 +2152,8 @@ def playgame(ws):
                     blue.lock = None
 
                 board.countdown = snapshot["countdown"]
+                board.last_play = snapshot["last_play"]
+                board.last_player = snapshot["last_player"]
 
                 board.update(True)
 
