@@ -334,14 +334,7 @@
   }
 
 
-  .redstone{
-  width: 30px;
-  height: 30px;
-  opacity: 0;
-  animation: twinkle 4s linear infinite;
-  }
-
-    .bluestone{
+  .stone{
   width: 30px;
   height: 30px;
   opacity: 0;
@@ -354,485 +347,245 @@
     100% {filter: brightness(75%);}
   }
 
- #reda1 {
+ #a1 {
   position: absolute;
   top: 556px;
   left: 53px;
   }
 
 
-  #reda2 {
+  #a2 {
   position: absolute;
   top: 639px;
   left: 148px;
   }
 
-  #reda3 {
+  #a3 {
   position: absolute;
   top: 665px;
   left: 208px;
   }
 
-  #reda4 {
+  #a4 {
   position: absolute;
   top: 615px;
   left: 251px;
   }
 
-  #reda5 {
+  #a5 {
   position: absolute;
   top: 559.5px;
   left: 217.5px;
   }
 
-  #reda6 {
+  #a6 {
   position: absolute;
   top: 573.5px;
   left: 153.5px;
   }
 
-  #reda7 {
+  #a7 {
   position: absolute;
   top: 615px;
   left: 410px;
   }
 
-  #reda8 {
+  #a8 {
   position: absolute;
   top: 720.5px;
   left: 459px;
   }
 
 
-   #reda9 {
+   #a9 {
   position: absolute;
   top: 782px;
   left: 423px;
   }
 
-  #reda10 {
+  #a10 {
   position: absolute;
   top: 782.5px;
   left: 495px;
   }
 
- 
 
-  #reda11 {
+
+  #a11 {
   position: absolute;
   top: 459px;
   left: 132.5px;
   }
 
-  #reda12 {
+  #a12 {
   position: absolute;
   top: 446px;
   left: 283px;
   }
 
-  #reda13 {
+  #a13 {
   position: absolute;
   top: 741.5px;
   left: 296.5px;
   }
 
-  #redb1 {
+  #b1 {
   position: absolute;
   top: 763.5px;
   left: 745.5px;
   }
 
-  #redb2 {
+  #b2 {
   position: absolute;
   top: 639.5px;
   left: 778px;
   }
 
-  #redb3 {
+  #b3 {
   position: absolute;
   top: 575px;
   left: 771px;
   }
 
-  #redb4 {
+  #b4 {
   position: absolute;
   top: 561.5px;
   left: 706.5px;
   }
 
-  #redb5 {
+  #b5 {
   position: absolute;
   top: 618px;
   left: 674.5px;
   }
 
-  #redb6 {
+  #b6 {
   position: absolute;
   top: 667px;
   left: 718px;
   }
 
-  #redb7 {
+  #b7 {
   position: absolute;
   top: 422px;
   left: 628px;
   }
 
-  #redb8 {
+  #b8 {
   position: absolute;
   top: 325.5px;
   left: 690px;
   }
 
-  #redb9 {
+  #b9 {
   position: absolute;
   top: 325.6px;
   left: 761px;
   }
 
-  #redb10 {
+  #b10 {
   position: absolute;
   top: 263.5px;
   left: 725px;
   }
 
-  #redb11 {
+  #b11 {
   position: absolute;
   top: 744px;
   left: 626px;
   }
 
-  #redb12 {
+  #b12 {
   position: absolute;
   top: 616.5px;
   left: 542px;
   }
 
-  #redb13 {
+  #b13 {
   position: absolute;
   top: 458.6px;
   left: 789px;
   }
 
-  #redc1 {
+  #c1 {
   position: absolute;
   top: 58px;
   left: 579px;
   }
 
-  #redc2 {
+  #c2 {
   position: absolute;
   top: 97px;
   left: 460.6px;
   }
 
-  #redc3 {
+  #c3 {
   position: absolute;
   top: 135px;
   left: 407.5px;
   }
 
-  #redc4 {
+  #c4 {
   position: absolute;
   top: 197px;
   left: 428px;
   }
 
-  #redc5 {
+  #c5 {
   position: absolute;
   top: 196.5px;
   left: 493px;
   }
 
-  #redc6 {
+  #c6 {
   position: absolute;
   top: 135px;
   left: 513px;
   }
 
-  #redc7 {
+  #c7 {
   position: absolute;
   top: 332.3px;
   left: 349px;
   }
 
-  #redc8 {
+  #c8 {
   position: absolute;
   top: 322px;
   left: 232px;
   }
 
-  #redc9 {
+  #c9 {
   position: absolute;
   top: 261px;
   left: 196.5px;
   }
 
-  #redc10 {
+  #c10 {
   position: absolute;
   top: 322.4px;
   left: 161px;
   }
 
-  #redc11 {
+  #c11 {
   position: absolute;
   top: 174.6px;
   left: 622.5px;
   }
 
-  #redc12 {
+  #c12 {
   position: absolute;
   top: 310.5px;
   left: 559.5px;
   }
 
-  #redc13 {
+  #c13 {
   position: absolute;
   top: 168px;
   left: 295px;
   }
 
 
-
-#bluea1 {
-  position: absolute;
-  top: 556px;
-  left: 53px;
-  }
-
-
-  #bluea2 {
-  position: absolute;
-  top: 639px;
-  left: 148px;
-  }
-
-  #bluea3 {
-  position: absolute;
-  top: 665px;
-  left: 208px;
-  }
-
-  #bluea4 {
-  position: absolute;
-  top: 615px;
-  left: 251px;
-  }
-
-  #bluea5 {
-  position: absolute;
-  top: 559.5px;
-  left: 217.5px;
-  }
-
-  #bluea6 {
-  position: absolute;
-  top: 573.5px;
-  left: 153.5px;
-  }
-
-  #bluea7 {
-  position: absolute;
-  top: 615px;
-  left: 410px;
-  }
-
-  #bluea8 {
-  position: absolute;
-  top: 720.5px;
-  left: 459px;
-  }
-
-
-   #bluea9 {
-  position: absolute;
-  top: 782px;
-  left: 423px;
-  }
-
-  #bluea10 {
-  position: absolute;
-  top: 782.5px;
-  left: 495px;
-  }
-
- 
-
-  #bluea11 {
-  position: absolute;
-  top: 459px;
-  left: 132.5px;
-  }
-
-  #bluea12 {
-  position: absolute;
-  top: 446px;
-  left: 283px;
-  }
-
-  #bluea13 {
-  position: absolute;
-  top: 741.5px;
-  left: 296.5px;
-  }
-
-  #blueb1 {
-  position: absolute;
-  top: 763.5px;
-  left: 745.5px;
-  }
-
-  #blueb2 {
-  position: absolute;
-  top: 639.5px;
-  left: 778px;
-  }
-
-  #blueb3 {
-  position: absolute;
-  top: 575px;
-  left: 771px;
-  }
-
-  #blueb4 {
-  position: absolute;
-  top: 561.5px;
-  left: 706.5px;
-  }
-
-  #blueb5 {
-  position: absolute;
-  top: 618px;
-  left: 674.5px;
-  }
-
-  #blueb6 {
-  position: absolute;
-  top: 667px;
-  left: 718px;
-  }
-
-  #blueb7 {
-  position: absolute;
-  top: 422px;
-  left: 628px;
-  }
-
-  #blueb8 {
-  position: absolute;
-  top: 325.5px;
-  left: 690px;
-  }
-
-  #blueb9 {
-  position: absolute;
-  top: 325.6px;
-  left: 761px;
-  }
-
-  #blueb10 {
-  position: absolute;
-  top: 263.5px;
-  left: 725px;
-  }
-
-  #blueb11 {
-  position: absolute;
-  top: 744px;
-  left: 626px;
-  }
-
-  #blueb12 {
-  position: absolute;
-  top: 616.5px;
-  left: 542px;
-  }
-
-  #blueb13 {
-  position: absolute;
-  top: 458.6px;
-  left: 789px;
-  }
-
-  #bluec1 {
-  position: absolute;
-  top: 58px;
-  left: 579px;
-  }
-
-  #bluec2 {
-  position: absolute;
-  top: 97px;
-  left: 460.6px;
-  }
-
-  #bluec3 {
-  position: absolute;
-  top: 135px;
-  left: 407.5px;
-  }
-
-  #bluec4 {
-  position: absolute;
-  top: 197px;
-  left: 428px;
-  }
-
-  #bluec5 {
-  position: absolute;
-  top: 196.5px;
-  left: 493px;
-  }
-
-  #bluec6 {
-  position: absolute;
-  top: 135px;
-  left: 513px;
-  }
-
-  #bluec7 {
-  position: absolute;
-  top: 332.3px;
-  left: 349px;
-  }
-
-  #bluec8 {
-  position: absolute;
-  top: 322px;
-  left: 232px;
-  }
-
-  #bluec9 {
-  position: absolute;
-  top: 261px;
-  left: 196.5px;
-  }
-
-  #bluec10 {
-  position: absolute;
-  top: 322.4px;
-  left: 161px;
-  }
-
-  #bluec11 {
-  position: absolute;
-  top: 174.6px;
-  left: 622.5px;
-  }
-
-  #bluec12 {
-  position: absolute;
-  top: 310.5px;
-  left: 559.5px;
-  }
-
-  #bluec13 {
-  position: absolute;
-  top: 168px;
-  left: 295px;
-  }
-
-  
 
 
 
@@ -949,7 +702,7 @@
 
 
 
-  
+
 
 
 #actionBox {
@@ -975,7 +728,7 @@
   height: 10%;
   border: none;
   font-size: 18px;
-    
+
   }
 
 
@@ -988,7 +741,7 @@
   animation: twinkle 4s linear infinite;
   }
 
- 
+
   .scorer1 {
   position: absolute;
   top: 493px;
@@ -1010,7 +763,7 @@
   .scoreb1 {
   position: absolute;
   top: 423px;
-  left: 430px; 
+  left: 430px;
   }
 
   .scoreb2 {
@@ -1726,6 +1479,7 @@
   transition-delay: 3s;
 
   }
+
 
 
 
