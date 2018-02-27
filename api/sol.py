@@ -1190,7 +1190,17 @@ class Player():
 
     def awaitingInput(self):
 
-        ingress = self.awaitingInput()
+        while True:
+        	ingress = self.ws.receive()
+        	if json.loads(ingress)['message'] == 'ping':
+        		pong(self.ws)
+        		pong(self.opp.ws)
+        		continue
+        	else:
+        		break
+
+        if json.loads(ingress)['message'] == 'reset':
+        	raise resetException()
 
         else:
             return ingress
