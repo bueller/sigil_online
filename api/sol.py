@@ -107,17 +107,7 @@ class Spell():
 
                 player.ws.send(json.dumps(egress))
 
-                while True:
-                    ingress = player.ws.receive()
-                    if json.loads(ingress)['message'] == 'ping':
-                        pong(player.ws)
-                        pong(player.opp.ws)
-                        continue
-                    else:
-                        break
-                
-                if json.loads(ingress)['message'] == 'reset':
-                    raise resetException()
+                ingress = player.awaitingInput()
 
                 keep = json.loads(ingress)['message']
                 
@@ -228,17 +218,9 @@ class Blink(Spell):
         
         while True:
             jmessage(player.ws, "Where would you like to Blink?", "node")
-            while True:
-                ingress = player.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(player.ws)
-                    pong(player.opp.ws)
-                    continue
-                else:
-                    break
-                
-            if json.loads(ingress)['message'] == 'reset':
-                raise resetException()
+            
+
+            ingress = player.awaitingInput()
 
             actualmessage = json.loads(ingress)['message']
 
@@ -258,17 +240,9 @@ class Blink(Spell):
 
         while True:
             jmessage(player.ws, "Select a stone to sacrifice.", "node")
-            while True:
-                ingress = player.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(player.ws)
-                    pong(player.opp.ws)
-                    continue
-                else:
-                    break
-                
-            if json.loads(ingress)['message'] == 'reset':
-                raise resetException()
+            
+
+            ingress = player.awaitingInput()
 
             actualmessage = json.loads(ingress)['message']
 
@@ -308,17 +282,7 @@ class Gust(Spell):
         while True:
             jmessage(player.ws, "Select an enemy stone to Gust, or press Done if you are done selecting.", "node")
         
-            while True:
-                ingress = player.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(player.ws)
-                    pong(player.opp.ws)
-                    continue
-                else:
-                    break
-                
-            if json.loads(ingress)['message'] == 'reset':
-                raise resetException()
+            ingress = player.awaitingInput()
 
             actualmessage = json.loads(ingress)['message']
 
@@ -355,17 +319,7 @@ class Gust(Spell):
         while gustingstonecount > 0:
             jmessage(player.ws, "Where would you like to Gust the enemy stone?", "node")
 
-            while True:
-                ingress = player.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(player.ws)
-                    pong(player.opp.ws)
-                    continue
-                else:
-                    break
-                
-            if json.loads(ingress)['message'] == 'reset':
-                raise resetException()
+            ingress = player.awaitingInput()
 
             actualmessage = json.loads(ingress)['message']
 
@@ -411,17 +365,7 @@ class Thunder(Spell):
         
         while True:
             jmessage(player.ws, "Select a spell.", "spell")
-            while True:
-                ingress = player.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(player.ws)
-                    pong(player.opp.ws)
-                    continue
-                else:
-                    break
-                
-            if json.loads(ingress)['message'] == 'reset':
-                raise resetException()
+            ingress = player.awaitingInput()
 
             actualmessage = json.loads(ingress)['message']
 
@@ -440,17 +384,7 @@ class Thunder(Spell):
         while destroyedcount <3:
             jmessage(player.ws, "Select an enemy stone in " + chosenspell.name[:-1] + " to destroy, or press Done if you are done selecting.", "node")
 
-            while True:
-                ingress = player.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(player.ws)
-                    pong(player.opp.ws)
-                    continue
-                else:
-                    break
-                
-            if json.loads(ingress)['message'] == 'reset':
-                raise resetException()
+            ingress = player.awaitingInput()
 
             actualmessage = json.loads(ingress)['message']
 
@@ -582,17 +516,7 @@ class Ice(Spell):
         while len(iceablespells) > 0:
             jmessage(player.ws, "Select an enemy stone to destroy, or press Done if you are done selecting.", "node")
 
-            while True:
-                ingress = player.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(player.ws)
-                    pong(player.opp.ws)
-                    continue
-                else:
-                    break
-                
-            if json.loads(ingress)['message'] == 'reset':
-                raise resetException()
+            ingress = player.awaitingInput()
 
             actualmessage = json.loads(ingress)['message']
 
@@ -659,17 +583,7 @@ class Syzygy(Spell):
         while enemycount > 0:
             jmessage(player.ws, "Where would you like to relocate it?", "node")
 
-            while True:
-                ingress = player.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(player.ws)
-                    pong(player.opp.ws)
-                    continue
-                else:
-                    break
-                
-            if json.loads(ingress)['message'] == 'reset':
-                raise resetException()
+            ingress = player.awaitingInput()
 
             actualmessage = json.loads(ingress)['message']
 
@@ -705,17 +619,7 @@ class Bewitch(Spell):
         while True:
             jmessage(player.ws, "Select an enemy stone to convert.", "node")
 
-            while True:
-                ingress = player.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(player.ws)
-                    pong(player.opp.ws)
-                    continue
-                else:
-                    break
-                                
-            if json.loads(ingress)['message'] == 'reset':
-                raise resetException()
+            ingress = player.awaitingInput()
 
             actualmessage = json.loads(ingress)['message']
 
@@ -746,17 +650,7 @@ class Bewitch(Spell):
 
         while True:
             jmessage(player.ws, "Select an adjacent enemy stone to convert.", "node")
-            while True:
-                ingress = player.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(player.ws)
-                    pong(player.opp.ws)
-                    continue
-                else:
-                    break
-                        
-            if json.loads(ingress)['message'] == 'reset':
-                raise resetException()
+            ingress = player.awaitingInput()
 
             actualmessage = json.loads(ingress)['message']
 
@@ -1289,7 +1183,17 @@ class Player():
 
         ### The player.ws attribute will be where we store
         ### the object which is the ws connection to each player.
+
         self.ws = None
+
+
+
+    def awaitingInput(self):
+
+        ingress = self.awaitingInput()
+
+        else:
+            return ingress
 
     def taketurn(self, canmove=True, candash=True, cancharm=True, canspell=True):
         global currentplayerhasmoved
@@ -1329,18 +1233,8 @@ class Player():
         self.ws.send(json.dumps(egress))
 
 
-        while True:
-            ingress = self.ws.receive()
-            if json.loads(ingress)['message'] == 'ping':
-                pong(self.ws)
-                pong(self.opp.ws)
-                continue
-            else:
-                break
+        ingress = self.awaitingInput()
 
-
-        if json.loads(ingress)['message'] == 'reset':
-                    raise resetException()
         action = json.loads(ingress)['message']
 
 
@@ -1467,18 +1361,7 @@ class Player():
     def firstmove(self):
         jmessage(self.ws, "Where would you like to place your first stone? ", "node")
 
-        while True:
-            ingress = self.ws.receive()
-            if json.loads(ingress)['message'] == 'ping':
-                pong(self.ws)
-                pong(self.opp.ws)
-                continue
-            else:
-                break
-
-
-        if json.loads(ingress)['message'] == 'reset':
-                    raise resetException()
+        ingress = self.awaitingInput()
         nodename = json.loads(ingress)['message']
 
 
@@ -1499,18 +1382,7 @@ class Player():
             self.ws.send(json.dumps(egress))
 
             while True:
-                while True:
-                    ingress = self.ws.receive()
-                    if json.loads(ingress)['message'] == 'ping':
-                        pong(self.ws)
-                        pong(self.opp.ws)
-                        continue
-                    else:
-                        break
-
-
-                if json.loads(ingress)['message'] == 'reset':
-                    raise resetException()
+                ingress = self.awaitingInput()
                 action = json.loads(ingress)['message']
                 if action == "pass":
                     break
@@ -1525,17 +1397,7 @@ class Player():
         if not preloaded:
             jmessage(self.ws, "Where would you like to move? ", "node")
 
-            while True:
-                ingress = self.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(self.ws)
-                    pong(self.opp.ws)
-                    continue
-                else:
-                    break
-
-            if json.loads(ingress)['message'] == 'reset':
-                    raise resetException()
+            ingress = self.awaitingInput()
             nodename = json.loads(ingress)['message']
         else:
             nodename = preloaded
@@ -1615,18 +1477,7 @@ class Player():
     def softmove(self):
         jmessage(self.ws, "Where would you like to soft move? ", "node")
         
-        while True:
-            ingress = self.ws.receive()
-            if json.loads(ingress)['message'] == 'ping':
-                pong(self.ws)
-                pong(self.opp.ws)
-                continue
-            else:
-                break
-
-
-        if json.loads(ingress)['message'] == 'reset':
-                    raise resetException()
+        ingress = self.awaitingInput()
         nodename = json.loads(ingress)['message']
         node = self.board.nodes[nodename]
         adjacent = False
@@ -1658,17 +1509,7 @@ class Player():
     def hardmove(self):
         jmessage(self.ws, "Where would you like to hard move? ", "node")
 
-        while True:
-            ingress = self.ws.receive()
-            if json.loads(ingress)['message'] == 'ping':
-                pong(self.ws)
-                pong(self.opp.ws)
-                continue
-            else:
-                break
-
-        if json.loads(ingress)['message'] == 'reset':
-                    raise resetException()
+        ingress = self.awaitingInput()
         nodename = json.loads(ingress)['message']
         node = self.board.nodes[nodename]
         adjacent = False
@@ -1702,18 +1543,8 @@ class Player():
             jmessage(self.ws, "Select your first stone to sacrifice. ", "node")
             nirvana = False
         
-        while True:
-            ingress = self.ws.receive()
-            if json.loads(ingress)['message'] == 'ping':
-                pong(self.ws)
-                pong(self.opp.ws)
-                continue
-            else:
-                break
+        ingress = self.awaitingInput()
 
-
-        if json.loads(ingress)['message'] == 'reset':
-                    raise resetException()
         sac1 = json.loads(ingress)['message']
         if self.board.nodes[sac1].stone != self.color:
             jmessage(self.ws, "You do not have a stone there!")
@@ -1731,19 +1562,7 @@ class Player():
                 jmessage(self.ws, "Select your second stone to sacrifice. ", "node")
                 
 
-                while True:
-                    ingress = self.ws.receive()
-                    if json.loads(ingress)['message'] == 'ping':
-                        pong(self.ws)
-                        pong(self.opp.ws)
-                        continue
-                    else:
-                        break
-
-
-
-                if json.loads(ingress)['message'] == 'reset':
-                        raise resetException()
+                ingress = self.awaitingInput()
                 sac2 = json.loads(ingress)['message']
                 if (self.board.nodes[sac2].stone != self.color):
                     jmessage(self.ws, "You do not have a stone there!")
@@ -1819,19 +1638,7 @@ class Player():
             jmessage(self.ws, "Where would you like to push the enemy stone? ", "node")
             
 
-            while True:
-                ingress = self.ws.receive()
-                if json.loads(ingress)['message'] == 'ping':
-                    pong(self.ws)
-                    pong(self.opp.ws)
-                    continue
-                else:
-                    break
-
-
-
-            if json.loads(ingress)['message'] == 'reset':
-                    raise resetException()
+            ingress = self.awaitingInput()
             push = json.loads(ingress)['message']
             if push not in pushingoptionnames:
                 jmessage(self.ws, "Invalid option!")
@@ -1866,6 +1673,8 @@ def jmessage(playerwebsocket, message, awaiting= None):
     ### but rather player.ws
     egress =  {"type": "message", "message": message, "awaiting": awaiting, }
     playerwebsocket.send(json.dumps(egress))
+
+
 
 
 class resetException(Exception):
@@ -1949,6 +1758,8 @@ def playgame(ws):
             if message == 'ping':
                 pong(red.ws)
                 continue
+
+                
             elif message == 'joinedgame':
                 redjoined = True
                 break
